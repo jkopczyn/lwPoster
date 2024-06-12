@@ -13,3 +13,38 @@ either one is more difficult to add to for other users
 
 alternatively store names in a DB and then grab those files
 ...no that seems like a terrible idea
+
+
+FileXdb -- local lightweight NoSQL, Python-native
+
+
+typical query would look like:
+
+# coll: FileXdb('meetup-data', '/path/to/dir').collection('meetup-params')
+
+# ? qu = {"title"} ?
+
+todays-data = coll.find(query=qu)
+
+x = coll.find(query=(qu*, "meetup-series": "North Oakland"))
+todays-data.update(x)
+
+x = coll.find(query=(qu*, "topic": "Projects"))
+todays-data.update(x)
+
+x = coll.find(query=(qu*, "rich-text": "full"))
+todays-data.update(x)
+
+x = coll.find(query=(qu*, "meetup-series": "North Oakland", "topic": "Projects"))
+todays-data.update(x)
+
+x = coll.find(query=(qu*, "meetup-series": "North Oakland", "rich-text": "full"))
+todays-data.update(x)
+
+x = coll.find(query=(qu*, "topic": "Projects", "rich-text": "full"))
+todays-data.update(x)
+
+x = coll.find(query=(qu*, "meetup-series": "North Oakland", "topic": "Projects", "rich-text": "full"))
+todays-data.update(x)
+
+return todays-data
