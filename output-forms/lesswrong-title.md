@@ -1,1 +1,1 @@
-${name}: ${topic-name}, ${month-day}
+${name}: ${topic-name}, ${month} ${day-of-month}
