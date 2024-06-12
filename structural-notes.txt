@@ -1,0 +1,15 @@
+lookup by multiple keys is not suited for JSON
+
+presumably use a NoSQL, lightest-weight possible
+
+or maybe SQLite?
+SQLite is probably not tolerant of incomplete lookups
+
+either one is more difficult to add to for other users
+- do I care about other users?
+- probably not, and I can create a setup tool if that changes
+(may create that for myself anyway)
+
+
+alternatively store names in a DB and then grab those files
+...no that seems like a terrible idea
