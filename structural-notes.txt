@@ -48,3 +48,33 @@ x = coll.find(query=(qu*, "meetup-series": "North Oakland", "topic": "Projects",
 todays-data.update(x)
 
 return todays-data
+
+
+TinyDB -- also local lightweight NoSQL Python-native, more common
+
+typical query would look like:
+
+db = TinyDB('/path/to/db.json')
+table = db.table("Records")
+
+Record = Query()
+
+fulltext = (Record.rich-text == "full")
+oakland = (Record.meetup-series == "North Oakland")
+projects = (Record.topic == "Projects")
+
+todays-data = table.search(?blank?)
+
+x = table.search(fulltext | oakland | projects)
+todays-data.merge(x)
+
+x = table.search((fulltext & oakland) | (fulltext & projects) | (oakland & projects))
+todays-data.merge(x)
+
+x = table.search(fulltext & oakland & projects)
+todays-data.update(x)
+
+return todays-data
+
+
+yeah okay assuming this works as I think it does tinyDB is much better
