@@ -42,3 +42,17 @@ def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
     defaults.update(merged_result)
 
     return defaults
+
+
+def merged_query(db, query):
+    """Query a database or table and merge all results into one
+
+    :param db (TinyDB Database/Table): table/db to search
+    :param query (TinyDB QueryInstance): search to execute
+    """
+    defaults = {}
+    records = db.search(query)
+    for r in records:
+        defaults.update(r)
+
+    return defaults
