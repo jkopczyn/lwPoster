@@ -63,7 +63,7 @@ fulltext = (Record.rich-text == "full")
 oakland = (Record.meetup-series == "North Oakland")
 projects = (Record.topic == "Projects")
 
-todays-data = table.search(?blank?)
+todays-data = table.search(~Record.rich-text.exists() & ~Record.meetup-series.exists() & ~Record.topic.exists())
 
 x = table.search(fulltext | oakland | projects)
 todays-data.merge(x)
@@ -78,3 +78,4 @@ return todays-data
 
 
 yeah okay assuming this works as I think it does tinyDB is much better
+confirmed that lookups work as I think they do
