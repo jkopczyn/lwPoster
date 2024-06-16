@@ -1,6 +1,6 @@
 from tinydb import TinyDB, Query
 
-database = TinyDB('../parameter-store.json')
+# database = TinyDB('../parameter-store.json')
 
 
 def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
@@ -60,6 +60,8 @@ def merged_query(db, query):
 
 def interactive_insert_data(db, record):
     """Insert/Override data in the DB, prompting user for confirmation
+
+    :bug: writes to everything if you give no org. keys, probably writes to all stricter instances with *some* org. keys
 
     :param db (TinyDB DB or Table): database or table to look up in
     :param record (dict): key-value pairs to add to DB

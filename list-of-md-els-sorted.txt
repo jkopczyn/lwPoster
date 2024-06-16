@@ -1,28 +1,28 @@
 # By meetup group
 address
 city
-day-of-week
-end-time
-entry-instructions
-group-boilerplate-description
+day_of_week
+end_time
+entry_instructions
+group_boilerplate_description
 name
 phone
-start-time
-start-time-plus-30m
+start_time
+start_time_plus_30m
 
 # By specific meetup
 month
-day-of-month
+day_of_month
 title
 
 # By topic
-topic-name
+topic_name
 body
-body-full
-body-plain
+body_full
+body_plain
 
 # generic
 link
-link-plain
+link_plain
 
 
