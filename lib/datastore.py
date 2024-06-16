@@ -61,20 +61,28 @@ def merged_query(db, query):
 def interactive_insert_data(db, record):
     """Insert/Override data in the DB, prompting user for confirmation
 
-    :bug: writes to everything if you give no org. keys, probably writes to all stricter instances with *some* org. keys
-
     :param db (TinyDB DB or Table): database or table to look up in
     :param record (dict): key-value pairs to add to DB
     """
     organizational_keys = ["rich_text", "meetup_series", "topic", "location"]
+    q = Query()
+    if "DO_NOT_USE" in record:
+        raise ValueError("records may not contain the key 'DO_NOT_USE'; I don't know what you expected")
+
     subrecord = {}
     for k in organizational_keys:
         x = record.get(k)
         if x is not None:
             subrecord[k] = x
 
+    blanks_query = ~q.DO_NOT_USE.exists()
+    for k in organizational_keys:
+        if k in subrecord:
+            continue
+        blanks_query = blanks_query & ~(q[k].exists())
+
     conflicts = {}
-    existing_records = db.search(Query().fragment(subrecord))
+    existing_records = db.search(blanks_query & q.fragment(subrecord))
     for k in record.keys():
         if k in organizational_keys:
             continue
@@ -90,7 +98,7 @@ def interactive_insert_data(db, record):
         cont_input = input("continue, overriding old data? (y/N) ")
         if not coerce_bool_input(cont_input):
             return
-    return db.upsert(record, Query().fragment(subrecord))
+    return db.upsert(record, blanks_query & q.fragment(subrecord))
 
 
 def coerce_bool_input(inpt, default=False):
