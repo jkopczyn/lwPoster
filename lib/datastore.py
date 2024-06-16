@@ -2,6 +2,8 @@ from tinydb import TinyDB, Query
 
 # database = TinyDB('../parameter-store.json')
 
+organizational_keys = ["rich_text", "meetup_series", "topic"]
+q = Query()
 
 def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
     """Check for all stored values for a particular set of params. Start with the default values and
@@ -12,7 +14,6 @@ def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
     :param series (string or None): name of the meetup series being populated
     :param topic (string or None): meetup topic being reused for this instance
     """
-    q = Query()
     if rich_text is None:
         text_q = q
     else:
@@ -27,7 +28,7 @@ def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
     else:
         topic_q = q.topic == topic
 
-    blank_q = (~q.rich_text.exists() & ~q.meetup_series.exists() & ~q.topic.exists())
+    blank_q = (~q["rich_text"].exists() & ~q["meetup_series"].exists() & ~q["topic"].exists())
     defaults = db.search(blank_q)
 
     for query in [text_q, series_q, topic_q]:
@@ -64,8 +65,6 @@ def interactive_insert_data(db, record):
     :param db (TinyDB DB or Table): database or table to look up in
     :param record (dict): key-value pairs to add to DB
     """
-    organizational_keys = ["rich_text", "meetup_series", "topic", "location"]
-    q = Query()
     if "DO_NOT_USE" in record:
         raise ValueError("records may not contain the key 'DO_NOT_USE'; I don't know what you expected")
 
