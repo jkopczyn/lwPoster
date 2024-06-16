@@ -1,6 +1,6 @@
 ${title}
-WHEN: ${start-time} - ${end-time}
+WHEN: ${start_time} - ${end_time}
 
-${body-full}
+${body_full}
 
-${entry-instructions}
+${entry_instructions}

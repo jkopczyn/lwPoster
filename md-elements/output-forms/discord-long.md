@@ -1,8 +1,8 @@
 __${title}__
-*WHEN:* ${start-time} - ${end-time}
+*WHEN:* ${start_time} - ${end_time}
 *WHERE:* ${address}
 RSVPs are never needed.
 
-${body-full}
+${body_full}
 
-${entry-instructions}
+${entry_instructions}

@@ -1,7 +1,7 @@
-${body-full}
+${body_full}
 
-${entry-instructions}
+${entry_instructions}
 
 **Format:**
 
-${group-boilerplate-description}
+${group_boilerplate_description}
