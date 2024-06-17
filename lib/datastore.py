@@ -14,20 +14,16 @@ def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
     :param series (string or None): name of the meetup series being populated
     :param topic (string or None): meetup topic being reused for this instance
     """
-    if rich_text is None:
-        text_q = ~(q["rich_text"].exists())
-    else:
+    keys_to_queries = {key: ~(q[key].exists()) for key in organizational_keys}
+
+    if rich_text is not None:
         sanitized = str(rich_text).lower()
         text_q = q.rich_text.map(lambda x: str(x).lower()) == sanitized
-    if series is None:
-        series_q = ~(q["meetup_series"].exists())
-    else:
-        series_q = q.meetup_series == series
-    if topic is None:
-        topic_q = q
-        text_q = ~(q["topic"].exists())
-    else:
-        topic_q = q.topic == topic
+        keys_to_queries["rich_text"] = text_q
+    if series is not None:
+        keys_to_queries["meetup_series"] = q.meetup_series == series
+    if topic is not None:
+        keys_to_queries["topic"] = q.topic == topic
 
     blank_q = blanks_query([])
     defaults = db.search(blank_q)
