@@ -29,7 +29,7 @@ def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
     else:
         topic_q = q.topic == topic
 
-    blank_q = (~q["rich_text"].exists() & ~q["meetup_series"].exists() & ~q["topic"].exists())
+    blank_q = blanks_query([])
     defaults = db.search(blank_q)
 
     for query in [text_q, series_q, topic_q]:
@@ -46,6 +46,10 @@ def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
     return defaults
 
 
+def query_plus_organizational_blanks(query, nonblank_keys):
+    return blanks_query(nonblank_keys, query)
+
+
 def merged_query(db, query):
     """Query a database or table and merge all results into one
 
@@ -58,6 +62,18 @@ def merged_query(db, query):
         defaults.update(r)
 
     return defaults
+
+
+def blanks_query(nonblank_keys, initial_query=None):
+    if initial_query == None:
+        initial_query = ~q.DO_NOT_USE.exists()
+
+    blanks_q = initial_query
+    for k in organizational_keys:
+        if k in nonblank_keys:
+            continue
+        blanks_q = blanks_q & ~(q[k].exists())
+    return blanks_q
 
 
 def interactive_insert_data(db, record):
@@ -75,11 +91,7 @@ def interactive_insert_data(db, record):
         if x is not None:
             subrecord[k] = x
 
-    blanks_query = ~q.DO_NOT_USE.exists()
-    for k in organizational_keys:
-        if k in subrecord:
-            continue
-        blanks_query = blanks_query & ~(q[k].exists())
+    blanks_q = blanks_query(subrecord.keys())
 
     conflicts = {}
     existing_records = db.search(blanks_query & q.fragment(subrecord))
