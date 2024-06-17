@@ -1,0 +1,19 @@
+meetup group/series
+    designates a group of meetups
+    generally they share a location and schedule
+    - edge case: meetup at a different spot
+    - border case: meetup alternating spots
+ 
+topic
+    designates a recurring topic
+        (may be reused in different groups)
+    has a name and a body (description)
+        body may have several formats
+
+unique meetup
+    unshared time like day of the month/year
+    ?combined params like title (uses series/topic/unique time)
+
+plain/full
+    binary, should this be rich text or not
+    entirely for output formats

@@ -1,0 +1,81 @@
+lookup by multiple keys is not suited for JSON
+
+presumably use a NoSQL, lightest-weight possible
+
+or maybe SQLite?
+SQLite is probably not tolerant of incomplete lookups
+
+either one is more difficult to add to for other users
+- do I care about other users?
+- probably not, and I can create a setup tool if that changes
+(may create that for myself anyway)
+
+
+alternatively store names in a DB and then grab those files
+...no that seems like a terrible idea
+
+
+FileXdb -- local lightweight NoSQL, Python-native
+
+
+typical query would look like:
+
+# coll: FileXdb('meetup-data', '/path/to/dir').collection('meetup-params')
+
+# ? qu = {"title"} ?
+
+todays-data = coll.find(query=qu)
+
+x = coll.find(query=(qu*, "meetup-series": "North Oakland"))
+todays-data.update(x)
+
+x = coll.find(query=(qu*, "topic": "Projects"))
+todays-data.update(x)
+
+x = coll.find(query=(qu*, "rich-text": "full"))
+todays-data.update(x)
+
+x = coll.find(query=(qu*, "meetup-series": "North Oakland", "topic": "Projects"))
+todays-data.update(x)
+
+x = coll.find(query=(qu*, "meetup-series": "North Oakland", "rich-text": "full"))
+todays-data.update(x)
+
+x = coll.find(query=(qu*, "topic": "Projects", "rich-text": "full"))
+todays-data.update(x)
+
+x = coll.find(query=(qu*, "meetup-series": "North Oakland", "topic": "Projects", "rich-text": "full"))
+todays-data.update(x)
+
+return todays-data
+
+
+TinyDB -- also local lightweight NoSQL Python-native, more common
+
+typical query would look like:
+
+db = TinyDB('/path/to/db.json')
+table = db.table("Records")
+
+Record = Query()
+
+fulltext = (Record.rich-text == "full")
+oakland = (Record.meetup-series == "North Oakland")
+projects = (Record.topic == "Projects")
+
+todays-data = table.search(~Record.rich-text.exists() & ~Record.meetup-series.exists() & ~Record.topic.exists())
+
+x = table.search(fulltext | oakland | projects)
+todays-data.merge(x)
+
+x = table.search((fulltext & oakland) | (fulltext & projects) | (oakland & projects))
+todays-data.merge(x)
+
+x = table.search(fulltext & oakland & projects)
+todays-data.update(x)
+
+return todays-data
+
+
+yeah okay assuming this works as I think it does tinyDB is much better
+confirmed that lookups work as I think they do

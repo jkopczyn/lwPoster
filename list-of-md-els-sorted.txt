@@ -1,0 +1,28 @@
+# By meetup group
+address
+city
+day_of_week
+end_time
+entry_instructions
+group_boilerplate_description
+name
+phone
+start_time
+start_time_plus_30m
+
+# By specific meetup
+month
+day_of_month
+title
+
+# By topic
+topic_name
+body
+body_full
+body_plain
+
+# generic
+link
+link_plain
+
+
