@@ -1,4 +1,5 @@
 from tinydb import TinyDB, Query
+from itertools import combinations
 
 # database = TinyDB('../parameter-store.json')
 
@@ -15,29 +16,42 @@ def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
     :param topic (string or None): meetup topic being reused for this instance
     """
     keys_to_queries = {key: ~(q[key].exists()) for key in organizational_keys}
+    live_keys = {key: False for key in organizational_keys}
 
     if rich_text is not None:
         sanitized = str(rich_text).lower()
         text_q = q.rich_text.map(lambda x: str(x).lower()) == sanitized
         keys_to_queries["rich_text"] = text_q
+        live_keys["rich_text"] = True
     if series is not None:
-        keys_to_queries["meetup_series"] = q.meetup_series == series
+        keys_to_queries["meetup_series"] = (q.meetup_series == series)
+        live_keys["meetup_series"] = True
     if topic is not None:
-        keys_to_queries["topic"] = q.topic == topic
+        keys_to_queries["topic"] = (q.topic == topic)
+        live_keys["topic"] = True
 
     blank_q = blanks_query([])
     defaults = db.search(blank_q)
 
-    for query in [text_q, series_q, topic_q]:
+    for key in organizational_keys:
+        if not live_keys[key]:
+            continue
+        key_query = query_plus_organizational_blanks(keys_to_queries[key], [key])
+        merged_result = merged_query(db, key_query)
+        defaults.update(merged_result)
+
+    for keys in combinations(organizational_keys, 2):
+        if not all(live_keys[k] for k in keys):
+            continue
+        grouped_queries = intersect_queries(keys_to_queries[key] for key in keys)
+        key_query = query_plus_organizational_blanks(grouped_queries, list(keys))
         merged_result = merged_query(db, query)
         defaults.update(merged_result)
 
-    for query in [(text_q & series_q), (text_q & topic_q), (series_q & topic_q)]:
-        merged_result = merged_query(db, query)
+    if all(live_keys[k] for k in organizational_keys):
+        grouped_queries = intersect_queries(keys_to_queries[key] for key in organizational_keys)
+        merged_result = merged_query(grouped_queries)
         defaults.update(merged_result)
-
-    merged_result = merged_query(text_q & series_q & topic_q)
-    defaults.update(merged_result)
 
     return defaults
 
