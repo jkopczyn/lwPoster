@@ -42,6 +42,16 @@ def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
     return defaults
 
 
+def intersect_queries(queries):
+    if len(queries) == 0:
+        return Query()
+    q = queries[0]
+    idx = 1
+    while idx < len(queries):
+        q = q & queries[idx]
+        idx += 1
+    return q
+
 def query_plus_organizational_blanks(query, nonblank_keys):
     return blanks_query(nonblank_keys, query)
 
