@@ -52,6 +52,7 @@ def intersect_queries(queries):
         idx += 1
     return q
 
+
 def query_plus_organizational_blanks(query, nonblank_keys):
     return blanks_query(nonblank_keys, query)
 
@@ -71,15 +72,15 @@ def merged_query(db, query):
 
 
 def blanks_query(nonblank_keys, initial_query=None):
-    if initial_query == None:
-        initial_query = ~q.DO_NOT_USE.exists()
+    queries = []
+    if initial_query is not None:
+        queries = [initial_query]
 
-    blanks_q = initial_query
     for k in organizational_keys:
         if k in nonblank_keys:
             continue
-        blanks_q = blanks_q & ~(q[k].exists())
-    return blanks_q
+        queries.append(~(q[k].exists()))
+    return intersect_queries(queries)
 
 
 def interactive_insert_data(db, record):
@@ -88,9 +89,6 @@ def interactive_insert_data(db, record):
     :param db (TinyDB DB or Table): database or table to look up in
     :param record (dict): key-value pairs to add to DB
     """
-    if "DO_NOT_USE" in record:
-        raise ValueError("records may not contain the key 'DO_NOT_USE'; I don't know what you expected")
-
     subrecord = {}
     for k in organizational_keys:
         x = record.get(k)
