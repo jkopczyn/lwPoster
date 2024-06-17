@@ -31,7 +31,7 @@ def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
         live_keys["topic"] = True
 
     blank_q = blanks_query([])
-    defaults = db.search(blank_q)
+    defaults = merged_query(db, blank_q)
 
     for key in organizational_keys:
         if not live_keys[key]:
