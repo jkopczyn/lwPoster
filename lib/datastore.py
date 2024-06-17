@@ -40,13 +40,15 @@ def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
         merged_result = merged_query(db, key_query)
         defaults.update(merged_result)
 
-    for keys in combinations(organizational_keys, 2):
-        if not all(live_keys[k] for k in keys):
-            continue
-        grouped_queries = intersect_queries(keys_to_queries[key] for key in keys)
-        key_query = query_plus_organizational_blanks(grouped_queries, list(keys))
-        merged_result = merged_query(db, query)
-        defaults.update(merged_result)
+    for length in range(2,len(organizational_keys)):
+        for keys in combinations(organizational_keys, length):
+            if not all(live_keys[k] for k in keys):
+                continue
+            query_list = list(keys_to_queries[key] for key in keys)
+            grouped_queries = intersect_queries(query_list)
+            key_query = query_plus_organizational_blanks(grouped_queries, list(keys))
+            merged_result = merged_query(db, key_query)
+            defaults.update(merged_result)
 
     if all(live_keys[k] for k in organizational_keys):
         grouped_queries = intersect_queries(keys_to_queries[key] for key in organizational_keys)
@@ -57,6 +59,10 @@ def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
 
 
 def intersect_queries(queries):
+    """Take a list of queries and combine them with &.
+
+    Must be a list, not an iterator. The obvious patches just caused more problems.
+    """
     if len(queries) == 0:
         return Query()
     q = queries[0]
