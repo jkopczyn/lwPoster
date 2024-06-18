@@ -1,10 +1,17 @@
+import os
 from tinydb import TinyDB, Query
 from itertools import combinations
 
-# database = TinyDB('../parameter-store.json')
+DIRECTORY = os.path.dirname(os.path.abspath(__file__))
+
+database = TinyDB(DIRECTORY + '/parameter-store.json')
+input_values_table = database.table('input_values')
+locations_table = database.table('locations')
+output_forms_table = database.table('output_formats')
 
 organizational_keys = ["rich_text", "meetup_series", "topic"]
 q = Query()
+
 
 def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
     """Check for all stored values for a particular set of params. Start with the default values and
