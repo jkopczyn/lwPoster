@@ -118,7 +118,7 @@ def interactive_insert_data(db, record):
     blanks_q = blanks_query(subrecord.keys())
 
     conflicts = {}
-    existing_records = db.search(blanks_query & q.fragment(subrecord))
+    existing_records = db.search(blanks_q & q.fragment(subrecord))
     for k in record.keys():
         if k in organizational_keys:
             continue
@@ -134,7 +134,7 @@ def interactive_insert_data(db, record):
         cont_input = input("continue, overriding old data? (y/N) ")
         if not coerce_bool_input(cont_input):
             return
-    return db.upsert(record, blanks_query & q.fragment(subrecord))
+    return db.upsert(record, blanks_q & q.fragment(subrecord))
 
 
 def coerce_bool_input(inpt, default=False):
