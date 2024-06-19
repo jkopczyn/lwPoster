@@ -9,7 +9,11 @@ input_values_table = database.table('input_values')
 locations_table = database.table('locations')
 output_forms_table = database.table('output_formats')
 
-organizational_keys = ["rich_text", "meetup_series", "topic"]
+organizational_keys_map = {
+    input_values_table: ["rich_text", "meetup_series", "topic"],
+    locations_table: ["location"],
+    output_forms_table: ["rich_text", "destination"],
+}
 q = Query()
 
 
@@ -22,6 +26,10 @@ def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
     :param series (string or None): name of the meetup series being populated
     :param topic (string or None): meetup topic being reused for this instance
     """
+    if db not in organizational_keys_map:
+        raise ValueError("cannot look up in table without known organizational keys")
+
+    organizational_keys = organizational_keys_map[db]
     keys_to_queries = {key: ~(q[key].exists()) for key in organizational_keys}
     live_keys = {key: False for key in organizational_keys}
 
@@ -37,13 +45,13 @@ def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
         keys_to_queries["topic"] = (q.topic == topic)
         live_keys["topic"] = True
 
-    blank_q = blanks_query([])
+    blank_q = blanks_query(db, [])
     defaults = merged_query(db, blank_q)
 
     for key in organizational_keys:
         if not live_keys[key]:
             continue
-        key_query = query_plus_organizational_blanks(keys_to_queries[key], [key])
+        key_query = query_plus_organizational_blanks(db, keys_to_queries[key], [key])
         merged_result = merged_query(db, key_query)
         defaults.update(merged_result)
 
@@ -53,7 +61,7 @@ def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
                 continue
             query_list = list(keys_to_queries[key] for key in keys)
             grouped_queries = intersect_queries(query_list)
-            key_query = query_plus_organizational_blanks(grouped_queries, list(keys))
+            key_query = query_plus_organizational_blanks(db, grouped_queries, list(keys))
             merged_result = merged_query(db, key_query)
             defaults.update(merged_result)
 
@@ -80,8 +88,8 @@ def intersect_queries(queries):
     return q
 
 
-def query_plus_organizational_blanks(query, nonblank_keys):
-    return blanks_query(nonblank_keys, query)
+def query_plus_organizational_blanks(table, query, nonblank_keys):
+    return blanks_query(table, nonblank_keys, query)
 
 
 def merged_query(db, query):
@@ -98,12 +106,12 @@ def merged_query(db, query):
     return defaults
 
 
-def blanks_query(nonblank_keys, initial_query=None):
+def blanks_query(table, nonblank_keys, initial_query=None):
     queries = []
     if initial_query is not None:
         queries = [initial_query]
 
-    for k in organizational_keys:
+    for k in organizational_keys_map[table]:
         if k in nonblank_keys:
             continue
         queries.append(~(q[k].exists()))
@@ -117,17 +125,17 @@ def interactive_insert_data(db, record):
     :param record (dict): key-value pairs to add to DB
     """
     subrecord = {}
-    for k in organizational_keys:
+    for k in organizational_keys_map[db]:
         x = record.get(k)
         if x is not None:
             subrecord[k] = x
 
-    blanks_q = blanks_query(subrecord.keys())
+    blanks_q = blanks_query(db, subrecord.keys())
 
     conflicts = {}
     existing_records = db.search(blanks_q & q.fragment(subrecord))
     for k in record.keys():
-        if k in organizational_keys:
+        if k in organizational_keys_map[db]:
             continue
         for r in existing_records:
             if r.get(k) is not None:
