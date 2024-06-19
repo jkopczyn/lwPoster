@@ -17,33 +17,32 @@ organizational_keys_map = {
 q = Query()
 
 
-def lookup_with_overrides(db, rich_text = None, series = None, topic = None):
+def lookup_with_overrides(db, primary_keys):
     """Check for all stored values for a particular set of params. Start with the default values and
     override them with queries of increasing specificity based on the provided params.
 
     :param db (TinyDB DB or Table): database or table to look up in
-    :param rich_text (bool/string/None): targeting rich text or plain text output
-    :param series (string or None): name of the meetup series being populated
-    :param topic (string or None): meetup topic being reused for this instance
+    :param primary_keys (dict[string][string/other]): organizational keys to query by
     """
     if db not in organizational_keys_map:
         raise ValueError("cannot look up in table without known organizational keys")
-
     organizational_keys = organizational_keys_map[db]
+
+    extra_keys = set(primary_keys.keys()) - set(organizational_keys)
+    if extra_keys:
+        raise ValueError(str(extra_keys)+" are not valid organizational keys")
+
     keys_to_queries = {key: ~(q[key].exists()) for key in organizational_keys}
     live_keys = {key: False for key in organizational_keys}
 
-    if rich_text is not None:
-        sanitized = str(rich_text).lower()
-        text_q = q.rich_text.map(lambda x: str(x).lower()) == sanitized
-        keys_to_queries["rich_text"] = text_q
-        live_keys["rich_text"] = True
-    if series is not None:
-        keys_to_queries["meetup_series"] = (q.meetup_series == series)
-        live_keys["meetup_series"] = True
-    if topic is not None:
-        keys_to_queries["topic"] = (q.topic == topic)
-        live_keys["topic"] = True
+    for key in primary_keys.keys():
+        v = primary_keys[key]
+        if str(v) == v:
+            key_q = q[key] == v
+        else:
+            key_q = q[key].map(lambda x: str(x).lower()) == str(v).lower()
+        keys_to_queries[key] = key_q
+        live_keys[key] = True
 
     blank_q = blanks_query(db, [])
     defaults = merged_query(db, blank_q)
