@@ -3,6 +3,6 @@ __${title}__
 *WHERE:* ${address}
 RSVPs are never needed.
 
-${body_full}
+${topic_body_full}
 
 ${entry_instructions}

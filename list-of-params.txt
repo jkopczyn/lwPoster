@@ -1,6 +1,7 @@
-meetup group/series
+meetup-series
     designates a group of meetups
-    generally they share a location and schedule
+    assumed to share a schedule
+        usually also a location but those can change or be reused
     - edge case: meetup at a different spot
     - border case: meetup alternating spots
  
@@ -9,6 +10,7 @@ topic
         (may be reused in different groups)
     has a name and a body (description)
         body may have several formats
+            plain/full, destination, any others?
 
 unique meetup
     unshared time like day of the month/year
@@ -16,7 +18,15 @@ unique meetup
 
 plain/full
     binary, should this be rich text or not
+        bools munged to strings in the datastore but this is handled invisibly
     entirely for output formats
 
 destination
     facebook, discord, LW, email, text
+    affects format for output, mostly title/body
+    closely tied to where it's being posted
+
+location
+    lat/long (mostly for LW), street address, entry instructions
+    separate table for reusability
+        input table stores a location name, used as primary key for loc table

@@ -1,4 +1,4 @@
-${body_plain}
+${topic_body_plain}
 
 ${entry_instructions}
 

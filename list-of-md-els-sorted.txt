@@ -16,10 +16,10 @@ day_of_month
 title
 
 # By topic
+topic_body
+topic_body_full
+topic_body_plain
 topic_name
-body
-body_full
-body_plain
 
 # generic
 link

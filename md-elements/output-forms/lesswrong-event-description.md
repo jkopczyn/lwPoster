@@ -4,7 +4,7 @@ conversations. Everyone is welcome. Yes, that includes you, if you're reading th
 ${start_time}, but the official topic doesn't start until ${start_time_plus_30m} to accommodate
 stragglers, and even later arrivals are also welcome. RSVPs are never required.
 
-This week's topic is ${body}
+This week's topic is ${topic_body}
 
 ## About the Meetup ##
 
