@@ -131,10 +131,12 @@ def interactive_insert_data(db, record):
 
     blanks_q = blanks_query(db, subrecord.keys())
 
+    conflict_context = []
     conflicts = {}
     existing_records = db.search(blanks_q & q.fragment(subrecord))
     for k in record.keys():
         if k in organizational_keys_map[db]:
+            conflict_context.append(k)
             continue
         for r in existing_records:
             if r.get(k) is not None:
@@ -144,7 +146,10 @@ def interactive_insert_data(db, record):
         if conflicts.get(k) is not None:
             conflicts[k].append(record[k])
     if len(conflicts) > 0:
-        print("new records conflict with existing data:\n %s\n" % conflicts)
+        print(
+                "new records [for %s] conflict with existing data:\n %s\n" % (
+                    conflict_context, conflicts)
+                )
         cont_input = input("continue, overriding old data? (y/N) ")
         if not coerce_bool_input(cont_input):
             return
@@ -161,3 +166,10 @@ def coerce_bool_input(inpt, default=False):
         print("Didn't understand response, defaulting to no")
         b = False
     return b
+
+
+def insert_file_contents(db, record, key, filename):
+    file = open(filename, 'r')
+    contents = file.read().rstrip()
+    record.update({key: contents})
+    return interactive_insert_data(db, record)
