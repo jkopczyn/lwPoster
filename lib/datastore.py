@@ -9,10 +9,13 @@ input_values_table = database.table('input_values')
 locations_table = database.table('locations')
 output_forms_table = database.table('output_formats')
 
+secrets_database = TinyDB(DIRECTORY + '/secrets-store.json')
+
 organizational_keys_map = {
     input_values_table: ["rich_text", "meetup_series", "topic"],
     locations_table: ["location"],
     output_forms_table: ["rich_text", "destination"],
+    secrets_database: ["meetup_series"],
 }
 q = Query()
 
@@ -173,3 +176,26 @@ def insert_file_contents(db, record, key, filename):
     contents = file.read().rstrip()
     record.update({key: contents})
     return interactive_insert_data(db, record)
+
+
+def store_secrets(
+        meetup_series,
+        gmail_username,
+        gmail_app_password,
+        fb_login_email,
+        phone_number,
+        maps_key,
+        lw_username,
+        lw_temporary_key,
+        ):
+    record = {
+            "meetup_series": meetup_series || None,
+            "gmail_username": gmail_username || None,
+            "gmail_app_password": gmail_app_password || None,
+            "fb_login_email": fb_login_email || None,
+            "phone_number": phone_number || None,
+            "maps_key":  maps_key || None,
+            "lw_username": lw_username || None,
+            "lw_temporary_key": lw_temporary_key || None,
+            }
+    return interactive_insert_data(secrets_database, record)

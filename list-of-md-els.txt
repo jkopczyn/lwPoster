@@ -4,9 +4,11 @@ day_of_month
 day_of_week
 end_time
 entry_instructions
+gmail_username
 group_boilerplate_description
 link
 link_plain
+lw_username
 month
 name
 phone

@@ -6,9 +6,13 @@ end_time
 entry_instructions
 group_boilerplate_description
 name
-phone
 start_time
 start_time_plus_30m
+
+#By meetup group, secret
+gmail_username
+lw_username
+phone
 
 # By specific meetup
 month
