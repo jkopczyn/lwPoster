@@ -178,13 +178,44 @@ def insert_file_contents(db, record, key, filename):
     return interactive_insert_data(db, record)
 
 
+def prompt_and_store_secrets():
+    print("This will prompt for the key secret values needed to post using this script.\n")
+    meetup_series = input("Enter name of meetup series (e.g. 'Downtown DC' or 'North Oakland': ")
+    gmail_username = input("Enter Gmail username (e.g. 'coolGuy@gmail.com'): ")
+    print("A Gmail app password is needed for automated email-sending, see\n"+
+    "https://knowledge.workspace.google.com/kb/how-to-create-app-passwords-000009237\n")
+    gmail_app_password = input("Enter Gmail app password: ")
+    # fb_login_email = input("Enter email used for Facebook login: ")
+    phone_number = input("Enter phone number for contacting organizer (mostly for gaining entry): ")
+    print(
+            "To post events to LessWrong, a Google Maps API Key is needed, because\n" +
+            "they wrote the site entirely out of undocumented chewing gum. See\n" +
+            "https://developers.google.com/maps/documentation/javascript/get-api-key")
+    google_maps_key = input("Enter Google Maps API key: ")
+    lw_username = input("Enter LessWrong username to post under: ")
+    print("A key to post automatically to LessWrong cannot be extracted from their API.\n" +
+    "This key must be extracted from your cookies on the LessWrong site\n" +
+    "while logged in, and extracted; then repeat this process every few months.\n")
+    lw_temporary_key = input("Enter temporary LW key: ")
+    return store_secrets(
+            meetup_series = meetup_series,
+            gmail_username = gmail_username,
+            gmail_app_password = gmail_app_password,
+            # fb_login_email = fb_login_email,
+            phone_number = phone_number,
+            google_maps_key = google_maps_key,
+            lw_username = lw_username,
+            lw_temporary_key = lw_temporary_key)
+
+
+
 def store_secrets(
         meetup_series,
         gmail_username,
         gmail_app_password,
-        fb_login_email,
+        # fb_login_email,
         phone_number,
-        maps_key,
+        google_maps_key,
         lw_username,
         lw_temporary_key,
         ):
@@ -192,9 +223,9 @@ def store_secrets(
             "meetup_series": meetup_series || None,
             "gmail_username": gmail_username || None,
             "gmail_app_password": gmail_app_password || None,
-            "fb_login_email": fb_login_email || None,
-            "phone_number": phone_number || None,
-            "maps_key":  maps_key || None,
+            # "fb_login_email": fb_login_email || None,
+            "phone": phone_number || None,
+            "google_maps_key":  google_maps_key || None,
             "lw_username": lw_username || None,
             "lw_temporary_key": lw_temporary_key || None,
             }
