@@ -14,27 +14,7 @@ import urllib.request, urllib.parse, urllib.error
 from subprocess import Popen, PIPE
 
 import lib.posting_config
-
-default_config = lib.posting_config.PostingConfig()
-
-def next_meetup_date(config=default_config):
-    return next_meetup_date_testable(config, datetime.datetime.now())
-
-def next_meetup_date_testable(config, dt):
-    d = dt.date()
-    if dt.time() > datetime.time(hour=18): # if it's 6 PM or later
-        d += datetime.timedelta(days=1) # then don't schedule it for today
-    day_number = config.get("weekday_number")
-    if day_number is None:
-        raise Exception("Day of the week must be specified")
-    return next_weekday(d, day_number)
-
-def next_weekday(d, weekday):
-    target_day = d.weekday()+1
-    days_ahead = weekday - target_day
-    if days_ahead < 0:  # Target day already happened this week
-        days_ahead += 7
-    return d + datetime.timedelta(days_ahead)
+import lib.pick_date
 
 
 def load_boilerplate(config):
@@ -157,7 +137,7 @@ def lw2_post_meetup(topic, config, public):
     maps_key = config.get("maps_key")
     lw_key = config.get("lw_key")
 
-    date = next_meetup_date(config)
+    date = lib.pick_date.next_meetup_date(config)
     startTime = datetime.time(18, 15)
     endTime = datetime.time(21, 00)
     with open("meetups/%s.md" % topic) as f:
@@ -378,7 +358,7 @@ def fb_body(topic, config):
     return gen_body(topic, config)
 
 def fb_meetup_attrs(topic, config):
-    date = next_meetup_date(config)
+    date = lib.pick_date.next_meetup_date(config)
     time = datetime.time(18, 15)
     location = config.get("location")
     return (
@@ -410,7 +390,7 @@ def email_pieces(topic, config):
     boilerplate = load_boilerplate(config)
     topic_title = load_text_title(topic)
     topic_text, topic_plaintext = load_text_and_plaintext_body(topic)
-    date = next_meetup_date(config)
+    date = lib.pick_date.next_meetup_date(config)
     location = config.get("location")
     when_str = gen_time(18, 15) # make this config later
     plain_email = message_plaintext(when_str, location.get("str"), topic_plaintext, boilerplate)
@@ -451,7 +431,7 @@ def print_text_meetup(topic, config, use_boilerplate):
         boilerplate = load_boilerplate(config)
     topic_title = load_text_title(topic)
     meetup_name = config.get("meetup_name")
-    date_obj = next_meetup_date(config)
+    date_obj = lib.pick_date.next_meetup_date(config)
     date_str = date_obj.strftime("%B %d")
     location = config.get("location")
     loc_str = location.get("str")
@@ -468,7 +448,7 @@ def print_plaintext_meetup(topic, config, use_boilerplate):
         boilerplate = load_boilerplate(config)
     topic_title = load_text_title(topic)
     meetup_name = config.get("meetup_name")
-    date_obj = next_meetup_date(config)
+    date_obj = lib.pick_date.next_meetup_date(config)
     date_str = date_obj.strftime("%B %d")
     location = config.get("location")
     loc_str = location.get("str")
