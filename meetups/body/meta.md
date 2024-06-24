@@ -1,0 +1,1 @@
+What meetup topics are good? What are not? What should the hosts do better? What's missing, that you wish was part of the meetups? And any other feedback. [Anonymous feedback form](https://forms.gle/dDRDe2u14JSXxuot9) also available.

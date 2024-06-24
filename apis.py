@@ -154,22 +154,34 @@ def gen_time(hour24, minute):
         half = "AM"
     return "%s:%s %s" % (h, minute, half)
 
-def message_plaintext(time_str, loc_str, topic_text, boilerplate):
-    return """WHEN: %s
+_plaintext_template_no_boilerplate = """WHEN: %s
+WHERE: %s
+
+%s"""
+_plaintext_template = """WHEN: %s
 WHERE: %s
 
 %s
-%s
-    """ % (time_str, loc_str, topic_text, boilerplate)
+%s"""
+_markdown_template_no_boilerplate = """**WHEN:** %s
+**WHERE:** %s
 
-def message_markdown(time_str, loc_str, topic_text, boilerplate):
-    return """**WHEN:** %s
-
+%s"""
+_markdown_template = """**WHEN:** %s
 **WHERE:** %s
 
 %s
-%s
-    """ % (time_str, loc_str, topic_text, boilerplate)
+%s"""
+
+def message_plaintext(time_str, loc_str, topic_text, boilerplate):
+    if boilerplate == "":
+        return _plaintext_template_no_boilerplate % (time_str, loc_str, topic_text)
+    return _plaintext_template % (time_str, loc_str, topic_text, boilerplate)
+
+def message_markdown(time_str, loc_str, topic_text, boilerplate):
+    if boilerplate == "":
+        return _markdown_template_no_boilerplate % (time_str, loc_str, topic_text)
+    return _markdown_template % (time_str, loc_str, topic_text, boilerplate)
 
 def message_html(time_str, loc_str, topic_text, boilerplate):
     return markdown.markdown(message_markdown(time_str, loc_str, topic_text, boilerplate))
