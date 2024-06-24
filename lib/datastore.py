@@ -220,13 +220,13 @@ def store_secrets(
         lw_temporary_key,
         ):
     record = {
-            "meetup_series": meetup_series || None,
-            "gmail_username": gmail_username || None,
-            "gmail_app_password": gmail_app_password || None,
-            # "fb_login_email": fb_login_email || None,
-            "phone": phone_number || None,
-            "google_maps_key":  google_maps_key || None,
-            "lw_username": lw_username || None,
-            "lw_temporary_key": lw_temporary_key || None,
+            "meetup_series": meetup_series or None,
+            "gmail_username": gmail_username or None,
+            "gmail_app_password": gmail_app_password or None,
+            # "fb_login_email": fb_login_email or None,
+            "phone": phone_number or None,
+            "google_maps_key":  google_maps_key or None,
+            "lw_username": lw_username or None,
+            "lw_temporary_key": lw_temporary_key or None,
             }
     return interactive_insert_data(secrets_database, record)
