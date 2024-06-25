@@ -198,7 +198,7 @@ def post(config, topic, host, public=True, skip=None, lw_url=None):
     print_plaintext = "plaintext" not in skip
     print_formatted_text = "markdown" not in skip
     if print_plaintext or print_formatted_text:
-        boil_input = input("include boilerplate? (y/N) ")
+        boil_input = input("include boilerplate in text output? (y/N) ")
         coerced_boil = boil_input.strip().lower()
         if coerced_boil == "y" or coerced_boil == "yes":
             boil = True
