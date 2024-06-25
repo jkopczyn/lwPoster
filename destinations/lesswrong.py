@@ -1,18 +1,20 @@
-from bs4 import BeautifulSoup
-from getpass import getpass
 import datetime
 import pytz
 import requests
 import string
 
+from bs4 import BeautifulSoup
+from getpass import getpass
+
 import lib.pick_date
+import lib.text_generators
 
 
 def lw2_title(topic, config):
-    return gen_title(topic, config.get("meetup_name"))
+    return lib.text_generators.gen_title(topic, config.get("meetup_name"))
 
 def lw2_body(topic, config):
-    return gen_body(topic, config)
+    return lib.text_generators.gen_body(topic, config)
 
 def lw2_post_meetup(topic, config, public):
     location = config.get_default("location", {"str": ""})

@@ -1,10 +1,11 @@
-from bs4 import BeautifulSoup
-from getpass import getpass
 import datetime
 import requests
 
-import lib.pick_date
+from bs4 import BeautifulSoup
+from getpass import getpass
 
+import lib.pick_date
+import lib.text_generators
 
 def fb_login(email, password=None):
     url = "https://m.facebook.com/login.php"
@@ -82,7 +83,7 @@ def fb_title(topic, config):
     meetup_name = config.get_default("fb_meetup_name", "")
     if meetup_name == "":
         meetup_name = config.get("meetup_name")
-    return gen_title(topic, meetup_name)
+    return lib.text_generators.gen_title(topic, meetup_name)
 
 def fb_email(config):
     fb_login_email = config.get_default("fb_login_email", "")
@@ -94,7 +95,7 @@ def fb_pass(config):
     return config.get_default("fb_login_password", None)
 
 def fb_body(topic, config):
-    return gen_body(topic, config)
+    return lib.text_generators.gen_body(topic, config)
 
 def fb_meetup_attrs(topic, config):
     date = lib.pick_date.next_meetup_date(config)

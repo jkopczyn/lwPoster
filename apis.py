@@ -1,92 +1,24 @@
-import smtplib
-from getpass import getpass
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-import requests
-from bs4 import BeautifulSoup
 import datetime
-import markdown
 import json
+import markdown
+import requests
+import smtplib
 import string
 import urllib.request, urllib.parse, urllib.error
+
+from bs4 import BeautifulSoup
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from getpass import getpass
 from subprocess import Popen, PIPE
 
 import destinations.lesswrong
 import destinations.facebook
+import lib.text_generators
 import lib.helpers
 import lib.posting_config
 import lib.pick_date
 import text_loaders
-
-def gen_body(topic, config):
-    boilerplate = text_loaders.load_boilerplate(config)
-    topic_text, _ = text_loaders.load_text_and_plaintext_body(topic)
-    return "%s\n%s" % (topic_text, boilerplate)
-
-def gen_plaintext_body(topic, config):
-    boilerplate = text_loaders.load_boilerplate(config)
-    _, topic_plaintext = text_loaders.load_text_and_plaintext_body(topic)
-    return "%s\n%s" % (topic_plaintext, boilerplate)
-
-def gen_title(topic, meetup_name):
-    topic_title = text_loaders.load_text_title(topic).strip()
-    return "%s: %s" % (meetup_name, topic_title)
-
-def gen_title_with_date(topic, meetup_name, date_str):
-    topic_title = text_loaders.load_text_title(topic).strip()
-    return "%s: %s: %s" % (meetup_name, date_str, topic_title)
-
-def gen_time(hour24, minute):
-    x = datetime.time(hour24, minute)
-    return x.strftime('%l:%M %p')
-
-_plaintext_template_no_boilerplate = """WHEN: %s
-WHERE: %s
-
-%s"""
-_plaintext_template = """WHEN: %s
-WHERE: %s
-
-%s
-%s"""
-_markdown_template_no_boilerplate = """**WHEN:** %s
-**WHERE:** %s
-
-%s"""
-_markdown_template = """**WHEN:** %s
-**WHERE:** %s
-
-%s
-%s"""
-
-def message_plaintext(time_str, loc_str, topic_text, boilerplate):
-    if boilerplate == "":
-        return _plaintext_template_no_boilerplate % (time_str, loc_str, topic_text)
-    return _plaintext_template % (time_str, loc_str, topic_text, boilerplate)
-
-def message_markdown(time_str, loc_str, topic_text, boilerplate):
-    if boilerplate == "":
-        return _markdown_template_no_boilerplate % (time_str, loc_str, topic_text)
-    return _markdown_template % (time_str, loc_str, topic_text, boilerplate)
-
-def message_html(time_str, loc_str, topic_text, boilerplate):
-    return markdown.markdown(message_markdown(time_str, loc_str, topic_text, boilerplate))
-
-def plaintext_with_title(topic, meetup_name, date_str, time_str, loc_str, boilerplate):
-    _, topic_plaintext = text_loaders.load_text_and_plaintext_body(topic)
-    return "%s\n%s" % (gen_title_with_date(topic, meetup_name, date_str),
-            message_plaintext(time_str, loc_str, topic_plaintext, boilerplate))
-
-def markdown_with_title(topic, meetup_name, date_str, time_str, loc_str, boilerplate):
-    topic_text, _ = text_loaders.load_text_and_plaintext_body(topic)
-    return "__%s__\n\n%s" % (gen_title_with_date(topic, meetup_name, date_str),
-            message_markdown(time_str, loc_str, topic_text, boilerplate))
-
-def html_with_title(topic, meetup_name, date_str, time_str, loc_str, boilerplate):
-    return markdown.markdown(markdown_with_title(topic, meetup_name, date_str, time_str, loc_str, boilerplate))
-
-
-
 
 def email_pieces(topic, config):
     boilerplate = text_loaders.load_boilerplate(config)
@@ -94,14 +26,15 @@ def email_pieces(topic, config):
     topic_text, topic_plaintext = text_loaders.load_text_and_plaintext_body(topic)
     date = lib.pick_date.next_meetup_date(config)
     location = config.get("location")
-    when_str = gen_time(18, 15) # make this config later
-    plain_email = message_plaintext(when_str, location.get("str"), topic_plaintext, boilerplate)
-    html_email = message_html(when_str, location.get("str"), topic_text, boilerplate)
+    when_str = lib.text_generators.gen_time(18, 15) # make this config later
+    plain_email = lib.text_generators.gen_message_plaintext(when_str, location.get("str"), topic_plaintext, boilerplate)
+    html_email = lib.text_generators.gen_message_html(when_str, location.get("str"), topic_text, boilerplate)
     email_title = _email_title(topic, config, date)
     return (email_title, plain_email, html_email)
 
 def _email_title(topic, config, date_obj):
-    return gen_title_with_date(topic, config.get("meetup_name"), date_obj.strftime("%b %d"))
+    return lib.text_generators.gen_title_with_date(
+            topic, config.get("meetup_name"), date_obj.strftime("%b %d"))
 
 def send_meetup_email(topic, config, gmail_username, toaddr):
     email_title, plaintext_email, html_email = email_pieces(topic, config)
@@ -137,8 +70,11 @@ def print_text_meetup(topic, config, use_boilerplate):
     date_str = date_obj.strftime("%B %d")
     location = config.get("location")
     loc_str = location.get("str")
-    time_str = "%s - %s" % (gen_time(18, 15), gen_time(22, 00)) # make this config later
-    description = markdown_with_title(topic, meetup_name, date_str, time_str, loc_str, boilerplate)
+    time_str = "%s - %s" % (
+            lib.text_generators.gen_time(18, 15),
+            lib.text_generators.gen_time(22, 00)
+            ) # make this config later
+    description = lib.text_generators.gen_markdown_with_title(topic, meetup_name, date_str, time_str, loc_str, boilerplate)
     print(description)
     with open("description.txt", 'w') as f:
         f.write(description)
@@ -154,8 +90,11 @@ def print_plaintext_meetup(topic, config, use_boilerplate):
     date_str = date_obj.strftime("%B %d")
     location = config.get("location")
     loc_str = location.get("str")
-    time_str = "%s - %s" % (gen_time(18, 15), gen_time(22, 00)) # make this config later
-    description = plaintext_with_title(topic, meetup_name, date_str, time_str, loc_str, boilerplate)
+    time_str = "%s - %s" % (
+            lib.text_generators.gen_time(18, 15),
+            lib.text_generators.gen_time(22, 00)
+            ) # make this config later
+    description = lib.text_generators.gen_plaintext_with_title(topic, meetup_name, date_str, time_str, loc_str, boilerplate)
     print(description)
     with open("plaindescription.txt", 'w') as f:
         f.write(description)
@@ -163,6 +102,7 @@ def print_plaintext_meetup(topic, config, use_boilerplate):
 
 
 
+# what was this for?
 def print_command(command, **kwargs):
     print(" ".join(command))
     p = Popen(command, stdout=PIPE, stderr=PIPE, **kwargs)
