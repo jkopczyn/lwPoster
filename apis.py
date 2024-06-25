@@ -15,54 +15,24 @@ import destinations.lesswrong
 import destinations.facebook
 import lib.posting_config
 import lib.pick_date
-
-
-def load_boilerplate(config):
-    phone = config.get("phone")
-    location_config = config.get("location")
-    boilerplate_path = config.get_default("boilerplate_path", "boilerplate.md")
-    if "phone" in location_config:
-        phone = "%s (general meetup info at %s)" % (location_config.get("phone"),
-                                                    phone)
-    if "instructions" in location_config:
-        instructions = location_config.get("instructions") + "\n"
-    else:
-        instructions = ""
-    with open(boilerplate_path) as f:
-        boilerplate = string.Template(instructions + f.read())
-    return boilerplate.substitute(phone=phone)
-
-def load_text_title(topic):
-    with open("meetups/title/%s.md" % topic) as f:
-        topic_title = f.read()
-    return topic_title
-
-def load_text_and_plaintext_body(topic):
-    with open("meetups/body/%s.md" % topic) as f:
-        topic_text = f.read()
-    try:
-        with open("meetups/plainbody/%s.md" % topic) as f:
-            topic_plaintext = f.read()
-    except IOError:
-        topic_plaintext = topic_text
-    return (topic_text, topic_plaintext)
+import text_loaders
 
 def gen_body(topic, config):
-    boilerplate = load_boilerplate(config)
-    topic_text, _ = load_text_and_plaintext_body(topic)
+    boilerplate = text_loaders.load_boilerplate(config)
+    topic_text, _ = text_loaders.load_text_and_plaintext_body(topic)
     return "%s\n%s" % (topic_text, boilerplate)
 
 def gen_plaintext_body(topic, config):
-    boilerplate = load_boilerplate(config)
-    _, topic_plaintext = load_text_and_plaintext_body(topic)
+    boilerplate = text_loaders.load_boilerplate(config)
+    _, topic_plaintext = text_loaders.load_text_and_plaintext_body(topic)
     return "%s\n%s" % (topic_plaintext, boilerplate)
 
 def gen_title(topic, meetup_name):
-    topic_title = load_text_title(topic).strip()
+    topic_title = text_loaders.load_text_title(topic).strip()
     return "%s: %s" % (meetup_name, topic_title)
 
 def gen_title_with_date(topic, meetup_name, date_str):
-    topic_title = load_text_title(topic).strip()
+    topic_title = text_loaders.load_text_title(topic).strip()
     return "%s: %s: %s" % (meetup_name, date_str, topic_title)
 
 def gen_time(hour24, minute):
@@ -102,12 +72,12 @@ def message_html(time_str, loc_str, topic_text, boilerplate):
     return markdown.markdown(message_markdown(time_str, loc_str, topic_text, boilerplate))
 
 def plaintext_with_title(topic, meetup_name, date_str, time_str, loc_str, boilerplate):
-    _, topic_plaintext = load_text_and_plaintext_body(topic)
+    _, topic_plaintext = text_loaders.load_text_and_plaintext_body(topic)
     return "%s\n%s" % (gen_title_with_date(topic, meetup_name, date_str),
             message_plaintext(time_str, loc_str, topic_plaintext, boilerplate))
 
 def markdown_with_title(topic, meetup_name, date_str, time_str, loc_str, boilerplate):
-    topic_text, _ = load_text_and_plaintext_body(topic)
+    topic_text, _ = text_loaders.load_text_and_plaintext_body(topic)
     return "__%s__\n\n%s" % (gen_title_with_date(topic, meetup_name, date_str),
             message_markdown(time_str, loc_str, topic_text, boilerplate))
 
@@ -118,9 +88,9 @@ def html_with_title(topic, meetup_name, date_str, time_str, loc_str, boilerplate
 
 
 def email_pieces(topic, config):
-    boilerplate = load_boilerplate(config)
-    topic_title = load_text_title(topic)
-    topic_text, topic_plaintext = load_text_and_plaintext_body(topic)
+    boilerplate = text_loaders.load_boilerplate(config)
+    topic_title = text_loaders.load_text_title(topic)
+    topic_text, topic_plaintext = text_loaders.load_text_and_plaintext_body(topic)
     date = lib.pick_date.next_meetup_date(config)
     location = config.get("location")
     when_str = gen_time(18, 15) # make this config later
@@ -159,8 +129,8 @@ def send_meetup_email(topic, config, gmail_username, toaddr):
 def print_text_meetup(topic, config, use_boilerplate):
     boilerplate = ""
     if use_boilerplate:
-        boilerplate = load_boilerplate(config)
-    topic_title = load_text_title(topic)
+        boilerplate = text_loaders.load_boilerplate(config)
+    topic_title = text_loaders.load_text_title(topic)
     meetup_name = config.get("meetup_name")
     date_obj = lib.pick_date.next_meetup_date(config)
     date_str = date_obj.strftime("%B %d")
@@ -176,8 +146,8 @@ def print_text_meetup(topic, config, use_boilerplate):
 def print_plaintext_meetup(topic, config, use_boilerplate):
     boilerplate = ""
     if use_boilerplate:
-        boilerplate = load_boilerplate(config)
-    topic_title = load_text_title(topic)
+        boilerplate = text_loaders.load_boilerplate(config)
+    topic_title = text_loaders.load_text_title(topic)
     meetup_name = config.get("meetup_name")
     date_obj = lib.pick_date.next_meetup_date(config)
     date_str = date_obj.strftime("%B %d")
