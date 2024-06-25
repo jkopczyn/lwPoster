@@ -193,7 +193,7 @@ def post(config, topic, host, public=True, skip=None, lw_url=None):
             email_group = config.get("email_group")
             toaddr = email_group
         else:
-            toaddr = "%s@gmail.com" % gmail_username
+            toaddr = gmail_username
         send_meetup_email(topic, config, gmail_username, toaddr)
         print("Email Sent")
     print_plaintext = "plaintext" not in skip
