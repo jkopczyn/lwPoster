@@ -2,6 +2,8 @@ import os
 from tinydb import TinyDB, Query
 from itertools import combinations
 
+import lib.helpers
+
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
 database = TinyDB(DIRECTORY + '/parameter-store.json')
@@ -154,21 +156,9 @@ def interactive_insert_data(db, record):
                     conflict_context, conflicts)
                 )
         cont_input = input("continue, overriding old data? (y/N) ")
-        if not coerce_bool_input(cont_input):
+        if not lib.helpers.coerce_bool_input(cont_input):
             return
     return db.upsert(record, blanks_q & q.fragment(subrecord))
-
-
-def coerce_bool_input(inpt, default=False):
-    coerced = inpt.strip().lower()
-    if coerced == "y" or coerced == "yes":
-        b = True
-    elif coerced == "n" or coerced == "no" or coerced == "":
-        b = False
-    else:
-        print("Didn't understand response, defaulting to no")
-        b = False
-    return b
 
 
 def insert_file_contents(db, record, key, filename):

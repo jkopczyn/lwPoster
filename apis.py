@@ -13,6 +13,7 @@ from subprocess import Popen, PIPE
 
 import destinations.lesswrong
 import destinations.facebook
+import lib.helpers
 import lib.posting_config
 import lib.pick_date
 import text_loaders
@@ -198,19 +199,12 @@ def post(config, topic, host, public=True, skip=None, lw_url=None):
     print_plaintext = "plaintext" not in skip
     print_formatted_text = "markdown" not in skip
     if print_plaintext or print_formatted_text:
-        boil_input = input("include boilerplate in text output? (y/N) ")
-        coerced_boil = boil_input.strip().lower()
-        if coerced_boil == "y" or coerced_boil == "yes":
-            boil = True
-        elif coerced_boil == "n" or coerced_boil == "no" or coerced_boil == "":
-            boil = False
-        else:
-            print("Didn't understand response, defaulting to no boilerplate")
-            boil = False
+        bool_input = input("include boilerplate in text output? (y/N) ")
+        b = lib.helpers.coerce_bool_input(bool_input)
     if print_plaintext:
-        print_text_meetup(topic, config, boil)
+        print_plaintext_meetup(topic, config, b)
     if print_formatted_text:
-        print_plaintext_meetup(topic, config, boil)
+        print_text_meetup(topic, config, b)
 
 if __name__ == "__main__":
     cfg = lib.posting_config.PostingConfig(file="config.json", secrets="secrets.json")
