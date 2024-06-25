@@ -6,12 +6,12 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from getpass import getpass
 
-import destinations.lesswrong
 import destinations.facebook
-import lib.text_generators
+import destinations.lesswrong
 import lib.helpers
-import lib.posting_config
 import lib.pick_date
+import lib.posting_config
+import lib.text_generators
 import text_loaders
 
 def email_pieces(topic, config):
