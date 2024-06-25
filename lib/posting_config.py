@@ -59,3 +59,6 @@ class PostingConfig:
         return v
 
 default_config = PostingConfig()
+
+def config(file, secrets):
+    return PostingConfig(file, secrets)

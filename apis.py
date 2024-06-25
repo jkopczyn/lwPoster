@@ -66,16 +66,8 @@ def gen_title_with_date(topic, meetup_name, date_str):
     return "%s: %s: %s" % (meetup_name, date_str, topic_title)
 
 def gen_time(hour24, minute):
-    if hour24 > 12:
-        h = hour24-12
-        half = "PM"
-    elif hour24 == 0:
-        h = 12
-        half = "AM"
-    else:
-        h = hour24
-        half = "AM"
-    return "%s:%s %s" % (h, minute, half)
+    x = datetime.time(hour24, minute)
+    return x.strftime('%l:%M %p')
 
 _plaintext_template_no_boilerplate = """WHEN: %s
 WHERE: %s
@@ -138,8 +130,8 @@ def lw2_post_meetup(topic, config, public):
     lw_key = config.get("lw_key")
 
     date = lib.pick_date.next_meetup_date(config)
-    startTime = datetime.time(18, 15)
-    endTime = datetime.time(21, 00)
+    startTime = datetime.time(18, 15) # make this config later
+    endTime = datetime.time(21, 00) # make this config later
     with open("meetups/%s.md" % topic) as f:
         topic_text = f.read()
     return lw2_post_meetup_raw(
@@ -359,7 +351,7 @@ def fb_body(topic, config):
 
 def fb_meetup_attrs(topic, config):
     date = lib.pick_date.next_meetup_date(config)
-    time = datetime.time(18, 15)
+    time = datetime.time(18, 15) # make this config later
     location = config.get("location")
     return (
         fb_email(config), fb_title(topic, config), fb_body(topic, config),
@@ -472,9 +464,6 @@ def print_command(command, **kwargs):
         raise IOError("Return Status %i" % p.returncode)
 
 
-def config(file="config.json", secrets="secrets.json"):
-    return lib.posting_config.PostingConfig(file, secrets)
-
 def post(config, topic, host, public=True, skip=None, lw_url=None):
     if skip is None:
         skip = {}
@@ -515,7 +504,7 @@ def post(config, topic, host, public=True, skip=None, lw_url=None):
         print_plaintext_meetup(topic, config, boil)
 
 if __name__ == "__main__":
-    cfg = config()
+    cfg = lib.posting_config.PostingConfig(file="config.json", secrets="secrets.json")
     topic = input("enter topic name: ")
     host = input("enter short name for location: ")
     post(cfg, topic, host, skip={
