@@ -1,16 +1,10 @@
 import datetime
 import json
-import markdown
-import requests
 import smtplib
-import string
-import urllib.request, urllib.parse, urllib.error
 
-from bs4 import BeautifulSoup
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from getpass import getpass
-from subprocess import Popen, PIPE
 
 import destinations.lesswrong
 import destinations.facebook
@@ -101,17 +95,17 @@ def print_plaintext_meetup(topic, config, use_boilerplate):
 
 
 
-
-# what was this for?
-def print_command(command, **kwargs):
-    print(" ".join(command))
-    p = Popen(command, stdout=PIPE, stderr=PIPE, **kwargs)
-    output, err = p.communicate()
-    print(output, end=' ')
-    if err:
-        print(err, end=' ')
-    if p.returncode != 0:
-        raise IOError("Return Status %i" % p.returncode)
+# from subprocess import Popen, PIPE
+# # what was this for? printing to a file instead of dual-printing?
+# def print_command(command, **kwargs):
+#     print(" ".join(command))
+#     p = Popen(command, stdout=PIPE, stderr=PIPE, **kwargs)
+#     output, err = p.communicate()
+#     print(output, end=' ')
+#     if err:
+#         print(err, end=' ')
+#     if p.returncode != 0:
+#         raise IOError("Return Status %i" % p.returncode)
 
 
 def post(config, topic, host, public=True, skip=None, lw_url=None):
