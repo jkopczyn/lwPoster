@@ -12,7 +12,7 @@ def next_meetup_date_testable(config, dt):
         d += datetime.timedelta(days=1) # then don't schedule it for today
     day_number = config.get("weekday_number")
     if day_number is None:
-        raise Exception("Day of the week must be specified")
+        raise ValueError("Day of the week must be specified in config")
     return next_weekday(d, day_number)
 
 def next_weekday(d, weekday):
