@@ -1,10 +1,11 @@
 from bs4 import BeautifulSoup
 from getpass import getpass
 import datetime
-import lib.pick_date
 import pytz
 import requests
 import string
+
+import lib.pick_date
 
 
 def lw2_title(topic, config):
