@@ -1,57 +1,11 @@
-import datetime
-import json
-import smtplib
-
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from getpass import getpass
-
 import destinations.facebook
+import destinations.gmail
 import destinations.lesswrong
 import lib.helpers
 import lib.pick_date
 import lib.posting_config
 import lib.text_generators
 import text_loaders
-
-def email_pieces(topic, config):
-    boilerplate = text_loaders.load_boilerplate(config)
-    topic_title = text_loaders.load_text_title(topic)
-    topic_text, topic_plaintext = text_loaders.load_text_and_plaintext_body(topic)
-    date = lib.pick_date.next_meetup_date(config)
-    location = config.get("location")
-    when_str = lib.text_generators.gen_time(18, 15) # make this config later
-    plain_email = lib.text_generators.gen_message_plaintext(when_str, location.get("str"), topic_plaintext, boilerplate)
-    html_email = lib.text_generators.gen_message_html(when_str, location.get("str"), topic_text, boilerplate)
-    email_title = _email_title(topic, config, date)
-    return (email_title, plain_email, html_email)
-
-def _email_title(topic, config, date_obj):
-    return lib.text_generators.gen_title_with_date(
-            topic, config.get("meetup_name"), date_obj.strftime("%b %d"))
-
-def send_meetup_email(topic, config, gmail_username, toaddr):
-    email_title, plaintext_email, html_email = email_pieces(topic, config)
-    msg = MIMEMultipart("alternative")
-
-    fromaddr = "%s@gmail.com" % gmail_username
-    msg["Subject"] = email_title
-    msg["From"] = fromaddr
-    msg["To"] = toaddr
-
-    part1 = MIMEText(plaintext_email, "plain")
-    msg.attach(part1)
-    part2 = MIMEText(html_email, "html")
-    msg.attach(part2)
-
-    gmail = smtplib.SMTP_SSL("smtp.gmail.com", 465)
-    pwd = config.get("gmail_app_password")
-    if not pwd:
-        pwd = getpass("Gmail application-specific password: ")
-    gmail.login(gmail_username, pwd)
-    gmail.sendmail(fromaddr, toaddr, msg.as_string())
-
-
 
 
 def print_text_meetup(topic, config, use_boilerplate):
@@ -127,8 +81,9 @@ def post(config, topic, host, public=True, skip=None, lw_url=None):
             email_group = config.get("email_group")
             toaddr = email_group
         else:
+            print("No destination email given, sending to sender")
             toaddr = gmail_username
-        send_meetup_email(topic, config, gmail_username, toaddr)
+        destinations.gmail.send_meetup_email(topic, config, gmail_username, toaddr)
         print("Email Sent to %s" % toaddr)
     print_plaintext = "plaintext" not in skip
     print_formatted_text = "markdown" not in skip
