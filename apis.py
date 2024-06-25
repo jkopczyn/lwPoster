@@ -195,7 +195,7 @@ def post(config, topic, host, public=True, skip=None, lw_url=None):
         else:
             toaddr = gmail_username
         send_meetup_email(topic, config, gmail_username, toaddr)
-        print("Email Sent")
+        print("Email Sent to %s" % toaddr)
     print_plaintext = "plaintext" not in skip
     print_formatted_text = "markdown" not in skip
     if print_plaintext or print_formatted_text:
