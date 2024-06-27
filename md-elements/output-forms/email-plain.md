@@ -1,7 +1,7 @@
-${topic_body_plain}
+This week: ${topic_name} ${topic_body_plain}
 
 ${entry_instructions}
 
-**Format:**
+##Format##
 
 ${group_boilerplate_description}

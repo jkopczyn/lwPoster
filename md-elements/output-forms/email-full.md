@@ -1,4 +1,4 @@
-${topic_body_full}
+This week: **${topic_name}** ${topic_body_full}
 
 ${entry_instructions}
 
