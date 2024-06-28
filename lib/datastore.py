@@ -71,7 +71,7 @@ def lookup_with_overrides(db, primary_keys):
 
     if all(live_keys[k] for k in organizational_keys):
         grouped_queries = intersect_queries(keys_to_queries[key] for key in organizational_keys)
-        merged_result = merged_query(grouped_queries)
+        merged_result = merged_query(db, grouped_queries)
         defaults.update(merged_result)
 
     return defaults
@@ -82,6 +82,7 @@ def intersect_queries(queries):
 
     Must be a list, not an iterator. The obvious patches just caused more problems.
     """
+    queries = list(queries)
     if len(queries) == 0:
         return Query()
     q = queries[0]
