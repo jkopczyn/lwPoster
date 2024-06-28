@@ -36,6 +36,8 @@ class PostingConfig:
             raise KeyError
         if len(args) == 2:
             self.public[args[0]] = args[1]
+        # if more than two, nest them in successive dicts
+        # or I think that's what this is supposed to do
         k = {}
         v = {}
         for key in args:
@@ -57,6 +59,14 @@ class PostingConfig:
         v = default
         self.set(*args, v)
         return v
+
+    def include_location(self, host):
+        loc_dict = self.get("locations")
+        loc_props = loc_dict.get(host)
+        if loc_props is None:
+            raise ValueError('no location for host %s' % host)
+        self.set("location", loc_props)
+
 
 default_config = PostingConfig()
 

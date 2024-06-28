@@ -12,7 +12,7 @@ import text_loaders
 def post(config, topic, host, public=True, skip=None, lw_url=None):
     if skip is None:
         skip = {}
-    config.set("location", config.get("locations").get(host))
+    config.include_location(host)
     # Facebook disabled until further notice
     # looks like it's no longer possible to post as a user
     # you must register as an app and get group owner permission to post with that app
