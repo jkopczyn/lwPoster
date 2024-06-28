@@ -63,9 +63,8 @@ def lookup_with_overrides(db, primary_keys):
         for keys in combinations(organizational_keys, length):
             if not all(live_keys[k] for k in keys):
                 continue
-            query_list = list(keys_to_queries[key] for key in keys)
-            grouped_queries = intersect_queries(query_list)
-            key_query = query_plus_organizational_blanks(db, grouped_queries, list(keys))
+            grouped_queries = intersect_queries(keys_to_queries[key] for key in keys)
+            key_query = query_plus_organizational_blanks(db, grouped_queries, keys)
             merged_result = merged_query(db, key_query)
             defaults.update(merged_result)
 
