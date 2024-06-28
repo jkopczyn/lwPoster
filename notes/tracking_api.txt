@@ -1,0 +1,24 @@
+{
+ 'entry_instructions': "Buzz for Kopczynski (or ask for the door code); we're  two floors up, at the back of the building. If this does not work, try ${phone}.",
+ 'meetup_series': 'North Oakland',
+ 'weekday_number': 2,
+ 'start_time': '18:30',
+ 'name': 'North Oakland LessWrong',
+ 'end_time': '22:00',
+ 'email_target': 'bayarealesswrong@googlegroups.com',
+ 'lesswrong_group_id': 'v7dn9rTWLcK5Tcy9f',
+ 'meetup_name': 'North Oakland Meetup',
+ 'frequency': '7d',
+ 'location': 'Mecatol'
+}
+
+PostingConfig(file_nonsecret, file_secret)
+
+PostingConfig.from_dict(secrets_dict)
+
+PostingConfig
+	get(*list_of_nested_keys)
+	set(*list_of_nested_keys, value)
+	get_default(*list_of_nested_keys, default)
+	include_location(host_name)
+		# makes location retrievable with get("location")
