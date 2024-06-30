@@ -22,3 +22,30 @@ PostingConfig
 	get_default(*list_of_nested_keys, default)
 	include_location(host_name)
 		# makes location retrievable with get("location")
+
+{
+		'email_group': 'bayarealesswrong@googlegroups.com',
+		'email': 'Used by SSC poster for contact info.',
+		'group_id': 'v7dn9rTWLcK5Tcy9f',
+		'fb_meetup_name': 'North Oakland Less Wrong Meetup',
+		'meetup_name': 'North Oakland Meetup',
+		'weekday_name': {
+			'value': 'Monday',
+			'comment': 'weekday_number is the source of truth. Monday is 1, Tuesday 2,  etc., Sunday is 7'
+		},
+		'weekday_number': 2,
+		'locations': {
+			'Lighthaven': {
+				'lat': 37.859975,
+				'lon': -122.259304,
+				'str': '2740 Telegraph Ave, Berkeley, CA 94705, United States',
+				'instructions': "There's usually someone waiting at the gate for events here."
+			},
+			'Mecatol': {
+				'lat': 37.85013,
+				'lon': -122.26179,
+				'str': '540 Alcatraz Ave, Oakland, CA 94609, United States',
+				'instructions': "Buzz for Kopczynski (or ask for the door code); we're  two floors up, at the back of the building."
+			}
+		}
+}
