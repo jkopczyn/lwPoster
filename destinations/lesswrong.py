@@ -6,7 +6,6 @@ import string
 from bs4 import BeautifulSoup
 from getpass import getpass
 
-import lib.pick_date
 import lib.text_generators
 
 
@@ -22,7 +21,7 @@ def lw2_post_meetup(topic, config, public):
     maps_key = config.get("maps_key")
     lw_key = config.get("lw_key")
 
-    date = lib.pick_date.next_meetup_date(config)
+    date_obj = config.get_date()
     startTime = datetime.time(18, 15) # make this config later
     endTime = datetime.time(21, 00) # make this config later
     with open("meetups/%s.md" % topic) as f:
@@ -33,7 +32,7 @@ def lw2_post_meetup(topic, config, public):
         lw2_title(topic, config),
         lw2_body(topic, config),
         location.get_default("str", ""),
-        date,
+        date_obj,
         startTime,
         endTime,
         group_id,

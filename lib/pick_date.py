@@ -11,9 +11,9 @@ def next_meetup_date_testable(config, dt):
     day_number = config.get("weekday_number")
     if day_number is None:
         raise ValueError("Day of the week must be specified in config")
-    return next_weekday(d, day_number)
+    return _next_weekday(d, day_number)
 
-def next_weekday(d, weekday):
+def _next_weekday(d, weekday):
     target_day = d.weekday()+1
     days_ahead = weekday - target_day
     if days_ahead < 0:  # Target day already happened this week

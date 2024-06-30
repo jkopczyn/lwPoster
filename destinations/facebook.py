@@ -4,7 +4,6 @@ import requests
 from bs4 import BeautifulSoup
 from getpass import getpass
 
-import lib.pick_date
 import lib.text_generators
 
 def fb_login(email, password=None):
@@ -98,12 +97,12 @@ def fb_body(topic, config):
     return lib.text_generators.gen_body(topic, config)
 
 def fb_meetup_attrs(topic, config):
-    date = lib.pick_date.next_meetup_date(config)
+    date_obj = config.get_date()
     time = datetime.time(18, 15) # make this config later
     location = config.get("location")
     return (
         fb_email(config), fb_title(topic, config), fb_body(topic, config),
-        location, date, time
+        location, date_obj, time
     )
 
 def fb_post_meetup(topic, config, public=False):
