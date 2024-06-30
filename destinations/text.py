@@ -10,10 +10,10 @@ def print_text_meetup(topic, config, use_boilerplate):
     date_str = config.get_date_str()
     location = config.get("location")
     loc_str = location.get("str")
-    time_str = "%s - %s" % (
-            lib.text_generators.gen_time(18, 15),
-            lib.text_generators.gen_time(22, 00)
-            ) # make this config later
+    time_str = lib.text_generators.gen_time_range(
+            config.get('start_time_obj'),
+            config.get('end_time_obj')
+            )
     description = lib.text_generators.gen_markdown_with_title(topic, meetup_name, date_str, time_str, loc_str, boilerplate)
     print(description)
     with open("description.txt", 'w') as f:
@@ -29,10 +29,10 @@ def print_plaintext_meetup(topic, config, use_boilerplate):
     date_str = config.get_date_str()
     location = config.get("location")
     loc_str = location.get("str")
-    time_str = "%s - %s" % (
-            lib.text_generators.gen_time(18, 15),
-            lib.text_generators.gen_time(22, 00)
-            ) # make this config later
+    time_str = lib.text_generators.gen_time_range(
+            config.get('start_time_obj'),
+            config.get('end_time_obj')
+            )
     description = lib.text_generators.gen_plaintext_with_title(topic, meetup_name, date_str, time_str, loc_str, boilerplate)
     print(description)
     with open("plaindescription.txt", 'w') as f:

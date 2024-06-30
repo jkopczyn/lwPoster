@@ -27,6 +27,9 @@ def gen_time(hour24, minute):
 def gen_time_from_obj(datetime_obj):
     return datetime_obj.strftime('%l:%M %p')
 
+def gen_time_range(start_obj, end_obj):
+    return "%s - %s" % (gen_time_from_obj(start_obj), gen_time_from_obj(end_obj))
+
 
 _plaintext_template_no_boilerplate = """WHEN: %s
 WHERE: %s

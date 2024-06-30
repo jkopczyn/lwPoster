@@ -98,7 +98,7 @@ def fb_body(topic, config):
 
 def fb_meetup_attrs(topic, config):
     date_obj = config.get_date()
-    time = datetime.time(18, 15) # make this config later
+    time = config.get('start_time_obj')
     location = config.get("location")
     return (
         fb_email(config), fb_title(topic, config), fb_body(topic, config),

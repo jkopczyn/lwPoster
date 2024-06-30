@@ -22,8 +22,8 @@ def lw2_post_meetup(topic, config, public):
     lw_key = config.get("lw_key")
 
     date_obj = config.get_date()
-    startTime = datetime.time(18, 15) # make this config later
-    endTime = datetime.time(21, 00) # make this config later
+    startTime = config.get('start_time_obj')
+    endTime = config.get('end_time_obj')
     with open("meetups/%s.md" % topic) as f:
         topic_text = f.read()
     return lw2_post_meetup_raw(
