@@ -1,4 +1,5 @@
 import constants
+import datetime
 import lib.pick_date
 import json
 
@@ -75,6 +76,16 @@ class PostingConfig:
         date_str = date_obj.strftime(constants.date_format)
         self.set('next_meetup_date', date_obj)
         self.set('next_meetup_date_str', date_str)
+
+    def populate_times(self):
+        start = self.get('start_time', '12:00')
+        end = self.get('end_time', '23:59')
+        start_hour, start_min = start.split(':')
+        start_time_obj = datetime.time(start_hour, start_min)
+        self.set('start_time_obj', start_time_obj)
+        end_hour, end_min = end.split(':')
+        end_time_obj = datetime.time(end_hour, end_min)
+        self.set('end_time_obj', end_time_obj)
 
     def get_date(self):
         return self.get('next_meetup_date')

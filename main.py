@@ -23,6 +23,7 @@ def post(config, topic, host, date=None, public=True, skip=None, lw_url=None):
 
     config.include_location(host)
     config.populate_date(date) # generates from weekday_number if None
+    config.populate_times()
 
     # Facebook disabled until further notice
     # looks like it's no longer possible to post as a user
