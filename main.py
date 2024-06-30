@@ -9,8 +9,6 @@ import lib.text_generators
 import text_loaders
 
 
-date_format = "%B %d"
-
 def get_date(config):
     '''Use config to pick next date, returned as date object.
 
@@ -22,13 +20,9 @@ def get_date(config):
 def post(config, topic, host, date=None, public=True, skip=None, lw_url=None):
     if skip is None:
         skip = {}
+
     config.include_location(host)
-
-    if date is None:
-        date = get_date(config)
-    date_str = date.strftime(date_format)
-
-    config.set_temp_date(date, date_str)
+    config.populate_date(date) # generates from weekday_number if None
 
     # Facebook disabled until further notice
     # looks like it's no longer possible to post as a user

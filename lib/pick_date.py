@@ -1,9 +1,7 @@
 import datetime
 import lib.posting_config
 
-default_config = lib.posting_config.default_config
-
-def next_meetup_date(config=default_config):
+def next_meetup_date(config):
     return next_meetup_date_testable(config, datetime.datetime.now())
 
 def next_meetup_date_testable(config, dt):

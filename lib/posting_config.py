@@ -1,3 +1,5 @@
+import constants
+import lib.pick_date
 import json
 
 class PostingConfig:
@@ -67,7 +69,10 @@ class PostingConfig:
             raise ValueError('no location for host %s' % host)
         self.set("location", loc_props)
 
-    def set_temp_date(self, date_obj, date_str):
+    def populate_date(self, date_obj=None):
+        if date_obj is None and self.get_date() is None:
+            date_obj = lib.pick_date.next_meetup_date(self)
+        date_str = date_obj.strftime(constants.date_format)
         self.set('next_meetup_date', date_obj)
         self.set('next_meetup_date_str', date_str)
 
