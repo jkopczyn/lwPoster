@@ -12,7 +12,7 @@ def email_pieces(topic, config):
     topic_title = text_loaders.load_text_title(topic)
     topic_text, topic_plaintext = text_loaders.load_text_and_plaintext_body(topic)
     location = config.get("location")
-    when_str = lib.text_generators.gen_time(18, 15) # make this config later
+    when_str = lib.text_generators.gen_time_from_obj(config.get('start_time_obj'))
     plain_email = lib.text_generators.gen_message_plaintext(when_str, location.get("str"), topic_plaintext, boilerplate)
     html_email = lib.text_generators.gen_message_html(when_str, location.get("str"), topic_text, boilerplate)
     email_title = _email_title(topic, config)

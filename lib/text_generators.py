@@ -22,8 +22,11 @@ def gen_title_with_date(topic, meetup_name, date_str):
     return "%s: %s: %s" % (meetup_name, date_str, topic_title)
 
 def gen_time(hour24, minute):
-    x = datetime.time(hour24, minute)
-    return x.strftime('%l:%M %p')
+    return gen_time_from_obj(datetime.time(hour24, minute))
+
+def gen_time_from_obj(datetime_obj):
+    return datetime_obj.strftime('%l:%M %p')
+
 
 _plaintext_template_no_boilerplate = """WHEN: %s
 WHERE: %s
