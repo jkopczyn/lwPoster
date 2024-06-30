@@ -17,7 +17,7 @@ class PostingConfig:
 
     def get(self, *args):
         if len(args) < 1:
-            raise KeyError
+            raise TypeError('no args to a get call')
         if len(args) == 1:
             return self.secret.get(args[0], self.public.get(args[0]))
         tmp_p = self.public
@@ -66,6 +66,16 @@ class PostingConfig:
         if loc_props is None:
             raise ValueError('no location for host %s' % host)
         self.set("location", loc_props)
+
+    def set_temp_date(self, date_obj, date_str):
+        self.set('next_meetup_date', date_obj)
+        self.set('next_meetup_date_str', date_str)
+
+    def get_date(self):
+        return self.get('next_meetup_date')
+
+    def get_date_str(self):
+        return self.get('next_meetup_date_str')
 
 
 default_config = PostingConfig()

@@ -9,10 +9,27 @@ import lib.text_generators
 import text_loaders
 
 
-def post(config, topic, host, public=True, skip=None, lw_url=None):
+date_format = "%B %d"
+
+def get_date(config):
+    '''Use config to pick next date, returned as date object.
+
+    :param config (PostingConfig) stored date about the meetup
+    '''
+    return lib.pick_date.next_meetup_date(config)
+
+
+def post(config, topic, host, date=None, public=True, skip=None, lw_url=None):
     if skip is None:
         skip = {}
     config.include_location(host)
+
+    if date is None:
+        date = get_date(config)
+    date_str = date.strftime(date_format)
+
+    config.set_temp_date(date, date_str)
+
     # Facebook disabled until further notice
     # looks like it's no longer possible to post as a user
     # you must register as an app and get group owner permission to post with that app

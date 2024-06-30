@@ -8,8 +8,7 @@ def print_text_meetup(topic, config, use_boilerplate):
         boilerplate = text_loaders.load_boilerplate(config)
     topic_title = text_loaders.load_text_title(topic)
     meetup_name = config.get("meetup_name")
-    date_obj = lib.pick_date.next_meetup_date(config)
-    date_str = date_obj.strftime("%B %d")
+    date_str = config.get_date_str()
     location = config.get("location")
     loc_str = location.get("str")
     time_str = "%s - %s" % (
@@ -28,8 +27,7 @@ def print_plaintext_meetup(topic, config, use_boilerplate):
         boilerplate = text_loaders.load_boilerplate(config)
     topic_title = text_loaders.load_text_title(topic)
     meetup_name = config.get("meetup_name")
-    date_obj = lib.pick_date.next_meetup_date(config)
-    date_str = date_obj.strftime("%B %d")
+    date_str = config.get_date_str()
     location = config.get("location")
     loc_str = location.get("str")
     time_str = "%s - %s" % (
