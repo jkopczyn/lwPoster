@@ -78,13 +78,13 @@ class PostingConfig:
         self.set('next_meetup_date_str', date_str)
 
     def populate_times(self):
-        start = self.get('start_time', '12:00')
-        end = self.get('end_time', '23:59')
+        start = self.get_default('start_time', '12:00')
+        end = self.get_default('end_time', '23:59')
         start_hour, start_min = start.split(':')
-        start_time_obj = datetime.time(start_hour, start_min)
+        start_time_obj = datetime.time(int(start_hour), int(start_min))
         self.set('start_time_obj', start_time_obj)
         end_hour, end_min = end.split(':')
-        end_time_obj = datetime.time(end_hour, end_min)
+        end_time_obj = datetime.time(int(end_hour), int(end_min))
         self.set('end_time_obj', end_time_obj)
 
     def get_date(self):
