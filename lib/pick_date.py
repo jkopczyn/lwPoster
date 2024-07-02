@@ -20,4 +20,9 @@ def _next_weekday(d, weekday):
         days_ahead += 7
     return d + datetime.timedelta(days_ahead)
 
-
+def future_date(month, day):
+    today = datetime.date.today()
+    possible_day = datetime.date(today.year, month, day)
+    if possible_day >= today:
+        return possible_day
+    return datetime.date(today.year+1, month, day)

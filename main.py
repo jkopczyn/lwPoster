@@ -1,4 +1,4 @@
-import datetime
+import constants
 import destinations.facebook
 import destinations.gmail
 import destinations.lesswrong
@@ -68,9 +68,9 @@ if __name__ == "__main__":
     if o_d:
         month = input("Provide month number (1-12): ")
         day = input("Provide day number (1-31): ")
-        overridden_date = datetime.date(datetime.date.today().year, int(month), int(day))
-        print("Scheduling for %s" % overridden_date.strftime(constants.date_format))
-        cfg.populate_date(date=overridden_date)
+        overridden_date = lib.pick_date.future_date(int(month), int(day))
+        print("Scheduling for %s" % overridden_date.strftime(constants.long_date_format))
+        cfg.populate_date(date_obj=overridden_date)
     post(cfg, topic, host, skip={
         "fb": True,
         "lw": True,
