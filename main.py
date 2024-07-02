@@ -1,3 +1,4 @@
+import datetime
 import destinations.facebook
 import destinations.gmail
 import destinations.lesswrong
@@ -58,6 +59,18 @@ if __name__ == "__main__":
     cfg = lib.posting_config.PostingConfig(file="config.json", secrets="secrets.json")
     topic = input("enter topic name: ")
     host = input("enter short name for location: ")
+    cfg.populate_date()
+    override_date = input(
+            "Scheduling for %s by default. Override? (y/N) " %
+            cfg.get('next_meetup_date_str')
+            )
+    o_d = lib.helpers.coerce_bool_input(override_date)
+    if o_d:
+        month = input("Provide month number (1-12): ")
+        day = input("Provide day number (1-31): ")
+        overridden_date = datetime.date(datetime.date.today().year, int(month), int(day))
+        print("Scheduling for %s" % overridden_date.strftime(constants.date_format))
+        cfg.populate_date(date=overridden_date)
     post(cfg, topic, host, skip={
         "fb": True,
         "lw": True,
