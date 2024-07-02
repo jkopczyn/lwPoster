@@ -71,7 +71,9 @@ class PostingConfig:
         self.set("location", loc_props)
 
     def populate_date(self, date_obj=None):
-        if date_obj is None and self.get_date() is None:
+        if date_obj is None:
+            date_obj = self.get_date()
+        if date_obj is None:
             date_obj = lib.pick_date.next_meetup_date(self)
         date_str = date_obj.strftime(constants.date_format)
         self.set('next_meetup_date', date_obj)
