@@ -22,6 +22,10 @@ PostingConfig
 	get_default(*list_of_nested_keys, default)
 	include_location(host_name)
 		# makes location retrievable with get("location")
+    populate_date(date_obj=None) # defaults to pick_date
+    populate_times() # from strings to time objs
+    get_date()
+    get_date_str()
 
 {
 		'email_group': 'bayarealesswrong@googlegroups.com',
