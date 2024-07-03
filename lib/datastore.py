@@ -22,6 +22,10 @@ organizational_keys_map = {
 q = Query()
 
 
+def open_db(filename):
+    return TinyDB(filename)
+
+
 def lookup_with_overrides(db, primary_keys):
     """Check for all stored values for a particular set of params. Start with the default values and
     override them with queries of increasing specificity based on the provided params.
