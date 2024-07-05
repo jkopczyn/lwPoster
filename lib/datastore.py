@@ -17,13 +17,47 @@ organizational_keys_map = {
     input_values_table: ["rich_text", "meetup_series", "topic"],
     locations_table: ["location"],
     output_forms_table: ["rich_text", "destination"],
+    root_databse: ["meetup_series"], # unused
     secrets_database: ["meetup_series"],
 }
 q = Query()
 
 
+def duplicate_orgkey_entry(new, old):
+    organizational_keys_map[new] = organizational_keys_map[old]
+
 def open_db(filename):
-    return TinyDB(filename)
+    new = TinyDB(filename)
+    duplicate_orgkey_entry(new, root_database)
+    return new
+
+def inputs_from_db(db):
+    if not isinstance(db, TinyDB):
+        db = open_db(db)
+    if db == database:
+        return input_values_table
+    in_table = db.table('input_values')
+    duplicate_orgkey_entry(in_table, input_values_table)
+    return in_table
+
+def locations_from_db(db):
+    if not isinstance(db, TinyDB):
+        db = open_db(db)
+    if db == database:
+        return locations_table
+    loc_table = db.table('locations')
+    duplicate_orgkey_entry(loc_table, locations_table)
+    return loc_table
+
+def outputs_from_db(db):
+    if not isinstance(db, TinyDB):
+        db = open_db(db)
+    if db == database:
+        return output_forms_table
+    out_table = db.table('output_formats')
+    duplicate_orgkey_entry(out_table, output_forms_table)
+    return out_table
+
 
 
 def lookup_with_overrides(db, primary_keys):
