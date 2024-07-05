@@ -1,3 +1,4 @@
+import constants
 import lib.datastore
 
 class DatastorePostingConfig:
@@ -5,6 +6,7 @@ class DatastorePostingConfig:
     def __init__(self, file=None, secrets=None):
         self.db = lib.datastore.database
         self.secrets_db = lib.datastore.secrets_database
+        self.scheduled_date = None
         if file is not None:
             self.db = lib.datastore.open_db(file)
         if secrets is not None:
@@ -26,13 +28,22 @@ class DatastorePostingConfig:
 
 
     def populate_times(self):
-        pass
+        start = self.get_default('start_time', constants.default_start_time)
+        end = self.get_default('end_time', constants.default_end_time)
+        self.start_time =lib.helpers.process_time_str(start)
+        self.end_time = lib.helpers.process_time_str(end)
 
     def populate_date(self, date_obj=None):
-        pass
+        if date_obj is None:
+            date_obj = self.get_date()
+        if date_obj is not None:
+            return
+        date_obj = lib.pick_date.next_meetup_date(self)
+        self.scheduled_date = date_obj
+        self.scheduled_date_str = date_obj.strftime(constants.date_format)
 
     def get_date(self):
-        pass
+        return self.scheduled_date
 
     def get_date_str(self):
-        pass
+        return self.scheduled_date_str
