@@ -3,13 +3,11 @@ import lib.datastore
 class DatastorePostingConfig:
     
     def __init__(self, file=None, secrets=None):
-        if file is None:
             self.db = lib.datastore.database
-        else:
-            self.db = lib.datastore.open_db(file)
-        if secrets is None:
             self.secrets_db = lib.datastore.secrets_database
-        else:
+        if file is not None:
+            self.db = lib.datastore.open_db(file)
+        if secrets is not None:
             self.secrets_db = lib.datastore.open_db(secrets)
 
 
