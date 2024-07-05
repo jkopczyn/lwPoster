@@ -14,10 +14,10 @@ output_forms_table = database.table('output_formats')
 secrets_database = TinyDB(DIRECTORY + '/secrets-store.json')
 
 organizational_keys_map = {
+    database: ["meetup_series"], # unused
     input_values_table: ["rich_text", "meetup_series", "topic"],
     locations_table: ["location"],
     output_forms_table: ["rich_text", "destination"],
-    root_databse: ["meetup_series"], # unused
     secrets_database: ["meetup_series"],
 }
 q = Query()
