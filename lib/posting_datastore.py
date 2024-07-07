@@ -11,11 +11,20 @@ class DatastorePostingConfig:
             self.db = lib.datastore.open_db(file)
         if secrets is not None:
             self.secrets_db = lib.datastore.open_db(secrets)
+        self.cache = None
 
+    def lookup(self, org_keys):
+        cache = lib.datastore.lookup_with_overrides(self.db, org_keys)
+        if self.cache:
+            self.cache |= cache
+        return self.cache
 
-    @classmethod
-    def from_dict(cls, d):
-        raise TypeError("Datastore can't be initialized from dict")
+    def secret_lookup(self, org_keys):
+        cache = lib.datastore.lookup_with_overrides(
+                self.secrets_db, org_keys)
+        if self.cache:
+            self.cache |= cache
+        return self.cache
 
     def get_location(self, lookup_params):
         # directly from a host
@@ -33,6 +42,7 @@ class DatastorePostingConfig:
         self.start_time =lib.helpers.process_time_str(start)
         self.end_time = lib.helpers.process_time_str(end)
 
+
     def populate_date(self, date_obj=None):
         if date_obj is None:
             date_obj = self.get_date()
@@ -41,6 +51,7 @@ class DatastorePostingConfig:
         date_obj = lib.pick_date.next_meetup_date(self)
         self.scheduled_date = date_obj
         self.scheduled_date_str = date_obj.strftime(constants.date_format)
+
 
     def get_date(self):
         return self.scheduled_date
