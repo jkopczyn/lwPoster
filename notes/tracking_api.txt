@@ -11,6 +11,13 @@
  'frequency': '7d',
  'location': 'Mecatol'
 }
+{
+ 'location': 'Mecatol',
+ 'lat': 37.85013,
+ 'lon': -122.26179,
+ 'str': '540 Alcatraz Ave, Oakland, CA 94609, United States'
+}
+
 
 PostingConfig(file_nonsecret, file_secret)
 

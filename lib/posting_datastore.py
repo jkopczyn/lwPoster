@@ -32,8 +32,10 @@ class DatastorePostingConfig:
         loc_table =  lib.datastore.locations_from_db(self.db)
         entry = datastore.lookup_with_overrides(in_table, lookup_params)
         loc_name = entry['location']
-        return lib.datastore.lookup_with_overrides(
+        loc_data = lib.datastore.lookup_with_overrides(
                 loc_table, {'location': loc_name})
+        self.cache |= loc_data
+        return loc_data
 
 
     def populate_times(self):
