@@ -16,19 +16,22 @@ class DatastorePostingConfig:
         cache = lib.datastore.lookup_with_overrides(self.db, org_keys)
         if self.cache:
             self.cache |= cache
-        return self.cache
+        if 'location' in cache:
+            loc_cache = self.get_location(cache['location'])
+            cache |= loc_cache
+        return cache
 
     def secret_lookup(self, org_keys):
         cache = lib.datastore.lookup_with_overrides(
                 self.secrets_db, org_keys)
         if self.cache:
             self.cache |= cache
-        return self.cache
+        if 'location' in cache:
+            loc_cache = self.get_location(cache['location'])
+            cache |= loc_cache
+        return cache
 
-    def get_location(self, lookup_params):
-        # directly from a host
-        entry = datastore.lookup_with_overrides(self.input_table, lookup_params)
-        loc_name = entry['location']
+    def get_location(self, loc_name):
         loc_data = lib.datastore.lookup_with_overrides(
                 self.locations_table, {'location': loc_name})
         self.cache |= loc_data
