@@ -3,14 +3,13 @@ import lib.datastore
 
 class DatastorePostingConfig:
     
-    def __init__(self, file=None, secrets=None):
+    def __init__(self):
         self.db = lib.datastore.database
+        self.input_table = lib.datastore.input_values_table
+        self.output_table = lib.datastore.output_forms_table
+        self.locations_table = lib.datastore.locations_table
         self.secrets_db = lib.datastore.secrets_database
         self.scheduled_date = None
-        if file is not None:
-            self.db = lib.datastore.open_db(file)
-        if secrets is not None:
-            self.secrets_db = lib.datastore.open_db(secrets)
         self.cache = None
 
     def lookup(self, org_keys):
@@ -28,12 +27,10 @@ class DatastorePostingConfig:
 
     def get_location(self, lookup_params):
         # directly from a host
-        in_table =  lib.datastore.inputs_from_db(self.db)
-        loc_table =  lib.datastore.locations_from_db(self.db)
-        entry = datastore.lookup_with_overrides(in_table, lookup_params)
+        entry = datastore.lookup_with_overrides(self.input_table, lookup_params)
         loc_name = entry['location']
         loc_data = lib.datastore.lookup_with_overrides(
-                loc_table, {'location': loc_name})
+                self.locations_table, {'location': loc_name})
         self.cache |= loc_data
         return loc_data
 
