@@ -12,6 +12,7 @@ class DatastorePostingConfig:
         self.scheduled_date = None
         self.cache = None
 
+
     def lookup(self, org_keys):
         cache = lib.datastore.lookup_with_overrides(self.db, org_keys)
         if self.cache:
@@ -20,6 +21,7 @@ class DatastorePostingConfig:
             loc_cache = self.get_location(cache['location'])
             cache |= loc_cache
         return cache
+
 
     def secret_lookup(self, org_keys):
         cache = lib.datastore.lookup_with_overrides(
@@ -30,6 +32,7 @@ class DatastorePostingConfig:
             loc_cache = self.get_location(cache['location'])
             cache |= loc_cache
         return cache
+
 
     def get_location(self, loc_name):
         loc_data = lib.datastore.lookup_with_overrides(
