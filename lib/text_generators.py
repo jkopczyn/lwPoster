@@ -8,11 +8,6 @@ def gen_body(topic, config):
     topic_text, _ = text_loaders.load_text_and_plaintext_body(topic)
     return "%s\n%s" % (topic_text, boilerplate)
 
-def gen_plaintext_body(topic, config):
-    boilerplate = text_loaders.load_boilerplate(config)
-    _, topic_plaintext = text_loaders.load_text_and_plaintext_body(topic)
-    return "%s\n%s" % (topic_plaintext, boilerplate)
-
 def gen_title(topic, meetup_name):
     topic_title = text_loaders.load_text_title(topic).strip()
     return "%s: %s" % (meetup_name, topic_title)
