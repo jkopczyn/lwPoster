@@ -16,6 +16,9 @@ class DatastorePostingConfig:
     def get_cache(self):
         return self.cache
 
+    def get(self, key):
+        return self.cache.get(key)
+
 
     def input_lookup(self, org_keys):
         cache = lib.datastore.lookup_with_overrides(
