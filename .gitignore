@@ -2,3 +2,4 @@ secrets.json
 __pycache__
 description.txt
 plaindescription.txt
+lib/secrets-store.json
