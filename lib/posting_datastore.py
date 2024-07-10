@@ -19,6 +19,9 @@ class DatastorePostingConfig:
     def get(self, key):
         return self.cache.get(key)
 
+    def get_default(self, key, default):
+        '''Get with a default to match posting_config API'''
+        return self.cache.get(key, default)
 
     def input_lookup(self, org_keys):
         cache = lib.datastore.lookup_with_overrides(

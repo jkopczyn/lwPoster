@@ -60,3 +60,18 @@ PostingConfig
 			}
 		}
 }
+
+
+main.post uses:
+include_location
+populate_date
+populate_times
+get
+
+and calls:
+fb_post_meetup
+lw2_post_meetup
+send_meetup_email
+print_plaintext_meetup
+print_text_meetup
+
