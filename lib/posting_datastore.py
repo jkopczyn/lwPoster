@@ -52,9 +52,9 @@ class DatastorePostingConfig:
 
 
     def populate_times(self):
-        start = self.get_default('start_time', constants.default_start_time)
-        end = self.get_default('end_time', constants.default_end_time)
-        self.start_time =lib.helpers.process_time_str(start)
+        start = self.cache.get('start_time', constants.default_start_time)
+        end = self.cache.get('end_time', constants.default_end_time)
+        self.start_time = lib.helpers.process_time_str(start)
         self.end_time = lib.helpers.process_time_str(end)
 
 
