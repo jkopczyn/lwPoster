@@ -77,6 +77,7 @@ print_text_meetup
 
 fb_post_meetup
     fb_meetup_attrs
+        get_date
         fb_email
             get_default(key, value)
         fb_title
@@ -86,6 +87,7 @@ fb_post_meetup
     fb_pass
         get_default(key, value)
 lw2_post_meetup
+    get_date
     get_default(key, value)
     lw2_title
         get
@@ -119,4 +121,5 @@ populate_date
 populate_times
 get(key) # one arg only
 get_default(key, default_value) # two args only
+get_date
 get_date_str
