@@ -39,7 +39,7 @@ class PostingConfig:
     def get_default(self, key, default_value):
         ret = self.get(key)
         if ret is None:
-            self.set([key], default_value)
+            self.set(key, default_value)
             return default_value
         return ret
 
