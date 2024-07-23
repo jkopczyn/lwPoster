@@ -9,7 +9,6 @@ import text_loaders
 
 def email_pieces(topic, config):
     boilerplate = text_loaders.load_boilerplate(config)
-    topic_title = text_loaders.load_text_title(topic)
     topic_text, topic_plaintext = text_loaders.load_text_and_plaintext_body(topic)
     location = config.get("location")
     when_str = lib.text_generators.gen_time_range(
