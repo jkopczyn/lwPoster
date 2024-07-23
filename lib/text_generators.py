@@ -14,7 +14,7 @@ def gen_title(topic, meetup_name):
 
 def gen_title_with_date(topic, meetup_name, date_str):
     topic_title = text_loaders.load_text_title(topic).strip()
-    return "%s: %s: %s" % (meetup_name, date_str, topic_title)
+    return "%s: %s: Wednesday %s" % (meetup_name, date_str, topic_title)
 
 def gen_time(hour24, minute):
     return gen_time_from_obj(datetime.time(hour24, minute))
