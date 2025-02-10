@@ -2,7 +2,7 @@ For help getting into the building, please call (or text, with a likely-somewhat
 
 **Format:**
 
-We meet and start hanging out at 6:15, but don’t officially start doing the meetup topic until 6:45-7:00 to accommodate stragglers. Usually there is a food order that goes out before we start the meetup topic.
+We meet and start hanging out at 6:15, but don’t officially start doing the meetup topic until 6:45-7:00 to accommodate stragglers. If there's interest, there is a food order that goes out before we start the meetup topic.
 
 **About these meetups:**
 
